@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Asim & Sana — Wedding Invitation"
+description = "A royal green-and-gold wedding invitation for Asim Abdul Ghafoor and Sana Abdul Khalik, opening with a full-screen invitation video and featuring event details, directions, RSVP, and contacts."
+version = "1.0.0"
+id = "artifacts/wedding-invitation"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 19315
+
+[services.development]
+run = "pnpm --filter @workspace/wedding-invitation run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/wedding-invitation", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/wedding-invitation/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "19315"
+BASE_PATH = "/"

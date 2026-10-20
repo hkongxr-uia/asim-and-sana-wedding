@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Wedding of Asim &amp; Sana</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Playfair Display, Cinzel, Cormorant Garamond, Montserrat, & Amiri -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Montserrat:wght@200;300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,600;1,700;1,800&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            emerald: {
+              950: '#021811',
+              900: '#06261c',
+              850: '#0b3527',
+              800: '#114434',
+              750: '#175642',
+              700: '#1f6a52'
+            },
+            gold: {
+              100: '#fcf8ec',
+              200: '#f7ebbe',
+              300: '#eed68a',
+              400: '#e2be56',
+              500: '#d2a42f',
+              600: '#b0831f',
+              700: '#896414',
+              800: '#61440a'
+            }
+          },
+          fontFamily: {
+            couple: ['Playfair Display', 'Cinzel', 'serif'],
+            serif: ['Cormorant Garamond', 'serif'],
+            cinzel: ['Cinzel', 'serif'],
+            sans: ['Montserrat', 'sans-serif'],
+            arabic: ['Amiri', 'serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Royal Gold Metallic Foil Sheen */
+    .gold-foil-text {
+      background: linear-gradient(135deg, #fff2d1 0%, #f6dd98 22%, #d2a42f 48%, #fff8e3 72%, #a87913 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 1px rgba(210, 164, 47, 0.4);
+    }
+    .gold-foil-subtle {
+      background: linear-gradient(135deg, #f7ebbe 0%, #fffbf0 50%, #c59727 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Bold, Tastefully Italic & Easily Readable Luxury Serif Names */
+    .couple-title-front {
+      font-family: 'Playfair Display', 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 700;
+      line-height: 1.22;
+      letter-spacing: 0.015em;
+    }
+    .couple-title-main {
+      font-family: 'Playfair Display', 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 700;
+      line-height: 1.16;
+      letter-spacing: 0.01em;
+    }
+
+    /* Antique Royal Gold Wax Seal */
+    .wax-seal {
+      background: radial-gradient(circle, #f3d47d 0%, #c9992c 45%, #886212 85%, #503803 100%);
+      box-shadow: 0 14px 30px -4px rgba(0,0,0,0.85), inset 0 2px 4px rgba(255,250,230,0.6), inset 0 -3px 6px rgba(0,0,0,0.7);
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+    }
+    .wax-seal:hover {
+      transform: scale(1.07);
+      box-shadow: 0 18px 36px -4px rgba(226, 190, 86, 0.55), inset 0 2px 5px rgba(255,255,255,0.7);
+    }
+    .wax-seal:active {
+      transform: scale(0.96);
+    }
+
+    /* Particle & Fireworks Canvases */
+    #dustCanvas, #fireworksCanvas {
+      pointer-events: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    #dustCanvas { z-index: 40; }
+    #fireworksCanvas { z-index: 60; }
+
+    /* Heart Glow Animation */
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 0.8; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.06); }
+    }
+    .heart-glow {
+      animation: pulse-glow 3.5s ease-in-out infinite;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Custom Royal Green & Gold Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #021811;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #896414;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="bg-emerald-950 text-stone-200 font-sans selection:bg-gold-500 selection:text-black min-h-screen overflow-x-hidden relative">
+
+  <!-- Ambient Gold Dust Canvas -->
+  <canvas id="dustCanvas"></canvas>
+
+  <!-- Celebratory Fireworks Canvas -->
+  <canvas id="fireworksCanvas"></canvas>
+
+  <!-- Bismillah Recitation Floating Indicator -->
+  <div id="bismillahAudioBadge" class="fixed top-6 left-1/2 -translate-x-1/2 z-50 hidden opacity-0 transition-all duration-500 flex items-center space-x-2.5 px-4 py-2 rounded-full bg-emerald-900/90 backdrop-blur-md border border-gold-400/50 shadow-2xl text-gold-200 text-xs font-cinzel tracking-wider">
+    <span class="w-2.5 h-2.5 rounded-full bg-gold-400 animate-ping"></span>
+    <span class="font-arabic text-sm text-gold-100">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</span>
+  </div>
+<!-- Floating Wedding Music Mute Button -->
+<button
+  id="musicToggleButton"
+  class="fixed bottom-5 right-5 z-50 hidden w-12 h-12 rounded-full bg-emerald-900/90 border border-gold-400/50 text-gold-200 shadow-2xl backdrop-blur-md transition-all duration-300 hover:scale-105"
+  aria-label="Turn wedding music on or off"
+>
+  🔇
+</button>
+  
+  <!-- ============================================================== -->
+  <!-- 1. FRONT PAGE COVER: PALACE BALCONY & ROYAL GREEN/GOLD ENVELOPE -->
+  <!-- ============================================================== -->
+  <section id="frontPageCover" class="relative z-30 min-h-screen flex items-center justify-center py-6 px-4 sm:px-8 transition-opacity duration-1000 overflow-hidden">
+    
+    <!-- Background: Palace Balcony Image -->
+    <div class="absolute inset-0 z-0">
+      <img 
+        id="frontPageBgImg"
+        src="image_05cde4.jpg" 
+        alt="Palace Balcony at Twilight" 
+        class="w-full h-full object-cover object-center filter brightness-[0.70] contrast-[1.10] scale-[1.02] transition-transform duration-1000"
+        onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80';"
+      />
+      <!-- Royal Emerald & Gold Vignette overlays -->
+      <div class="absolute inset-0 bg-gradient-to-t from-emerald-950 via-emerald-950/65 to-black/75"></div>
+      <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_transparent_25%,_rgba(2,24,17,0.92)_100%)]"></div>
+    </div>
+
+    <!-- Front Page Card Container -->
+    <div class="relative z-10 w-full max-w-md sm:max-w-lg flex flex-col items-center justify-between min-h-[88vh] text-center py-4">
+      
+      <!-- Top Minimal Header -->
+      <div class="w-full space-y-2 pt-6 sm:pt-2">
+        <div class="heart-glow inline-flex items-center justify-center text-amber-200 mb-1 drop-shadow-[0_0_14px_rgba(226,190,86,0.9)]">
+          <svg class="w-7 h-7 fill-current" viewBox="0 0 24 24">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+        </div>
+        <span class="block text-[11px] uppercase tracking-[0.45em] font-cinzel text-gold-300/85">
+          Wedding Invitation
+        </span>
+        <div class="w-10 h-[1px] bg-gradient-to-r from-transparent via-gold-400/70 to-transparent mx-auto"></div>
+      </div>
+
+      <!-- Center: Luxury Royal Emerald Envelope with Antique Gold Wax Seal -->
+      <div id="envelopeWrapper" class="relative w-full my-auto transition-transform duration-700">
+        
+        <div class="relative bg-emerald-900/90 backdrop-blur-md rounded-2xl shadow-[0_22px_60px_rgba(0,0,0,0.95)] border border-gold-400/35 p-1.5 overflow-hidden">
+          
+          <div class="relative bg-[#072c21]/95 rounded-xl p-7 sm:p-10 text-center border border-gold-400/30">
+            
+            <!-- Corner Filigree Accents in Gold -->
+            <div class="absolute top-2.5 left-2.5 w-6 h-6 border-t-2 border-l-2 border-gold-400/50"></div>
+            <div class="absolute top-2.5 right-2.5 w-6 h-6 border-t-2 border-r-2 border-gold-400/50"></div>
+            <div class="absolute bottom-2.5 left-2.5 w-6 h-6 border-b-2 border-l-2 border-gold-400/50"></div>
+            <div class="absolute bottom-2.5 right-2.5 w-6 h-6 border-b-2 border-r-2 border-gold-400/50"></div>
+
+            <span class="text-[11px] uppercase tracking-[0.35em] font-cinzel text-gold-300/80 block mb-2">
+              Together With Their Families
+            </span>
+
+            <!-- Groom and Bride Names -->
+            <h1 class="couple-title-front text-3xl sm:text-4xl md:text-5xl text-gold-100 gold-foil-text my-3">
+              <span class="block">Asim Abdul Ghafoor</span>
+              <span class="font-serif italic font-normal text-2xl sm:text-3xl text-gold-300/85 block my-1">&amp;</span>
+              <span class="block">Sana Abdul Khaliq</span>
+            </h1>
+
+            <!-- Decorative Divider -->
+            <div class="flex items-center justify-center my-5 space-x-3 text-gold-400/60">
+              <span class="h-[1px] w-12 bg-gradient-to-r from-transparent to-gold-400"></span>
+              <svg class="w-4 h-4 text-gold-400 fill-current" viewBox="0 0 24 24">
+                <path d="M12 2L14.4 7.2L20 8.4L16 12.5L17 18.2L12 15.5L7 18.2L8 12.5L4 8.4L9.6 7.2L12 2Z" />
+              </svg>
+              <span class="h-[1px] w-12 bg-gradient-to-l from-transparent to-gold-400"></span>
+            </div>
+
+            <!-- Wax Seal Trigger Button in Gold -->
+            <div class="mt-4 flex flex-col items-center">
+              <button id="breakSealBtn" class="wax-seal group relative w-20 h-20 sm:w-24 sm:h-24 rounded-full flex flex-col items-center justify-center cursor-pointer border-2 border-gold-300/60 focus:outline-none focus:ring-4 focus:ring-gold-400/40">
+                <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full border border-amber-950/60 flex items-center justify-center shadow-inner">
+                  <span class="font-cinzel text-xl sm:text-2xl font-bold text-amber-950 tracking-tighter filter drop-shadow-[0_1px_1px_rgba(255,255,255,0.4)]">
+                    A &amp; S
+                  </span>
+                </div>
+                <span class="absolute -top-1 -right-1 w-3 h-3 bg-yellow-200 rotate-45 rounded-sm opacity-90 shadow-sm animate-pulse"></span>
+                <span class="absolute -bottom-1 -left-1 w-2.5 h-2.5 bg-yellow-300 rotate-12 rounded-sm opacity-80"></span>
+              </button>
+
+              <span class="mt-4 text-xs tracking-[0.25em] font-cinzel text-gold-300/90 uppercase animate-bounce font-medium">
+                Tap Seal To Open
+              </span>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Direct Skip -->
+      <div class="w-full text-center pb-2">
+        <button id="skipEnvelopeBtn" class="text-xs tracking-widest font-cinzel text-gold-300/70 hover:text-gold-200 transition underline underline-offset-4 bg-emerald-950/70 backdrop-blur-md px-4 py-1.5 rounded-full border border-gold-500/25">
+          View Invitation Details &darr;
+        </button>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ============================================================== -->
+  <!-- 2. MAIN CEREMONIAL INVITATION                                   -->
+  <!-- ============================================================== -->
+  <main id="mainInvitation" class="opacity-0 translate-y-8 transition-all duration-1000 hidden max-w-5xl mx-auto px-4 sm:px-6 py-8">
+    
+    <!-- Top Navigation Ribbon -->
+    <nav class="sticky top-4 z-40 bg-emerald-950/85 backdrop-blur-md rounded-full px-5 py-3 border border-gold-400/35 flex justify-between items-center shadow-2xl mb-12">
+      <button onclick="returnToFrontPage()" class="font-cinzel text-xs uppercase tracking-wider text-gold-300 hover:text-gold-200 flex items-center space-x-1">
+        <span>&larr;</span>
+        <span>Cover</span>
+      </button>
+      <div class="space-x-5 text-xs font-cinzel uppercase tracking-wider">
+        <a href="#events" class="text-gold-200 hover:text-gold-400">Events</a>
+        <a href="#venues" class="text-gold-200 hover:text-gold-400">Venues</a>
+      </div>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSd-Grwo1IswhqHV7aUuLnQL2YEsvdHROZ14lOiK3tAh6MrhYw/viewform?usp=publish-editor" target="_blank" rel="noopener noreferrer" class="bg-gradient-to-r from-gold-500 via-gold-400 to-gold-600 text-emerald-950 px-4 py-1.5 rounded-full font-cinzel text-xs font-bold uppercase tracking-wider shadow-lg hover:brightness-110 transition inline-block">
+        RSVP
+      </a>
+    </nav>
+
+    <!-- INVITATION CARD IN ROYAL EMERALD & GOLD -->
+    <article class="relative bg-emerald-900 rounded-2xl border border-gold-400/35 p-6 sm:p-14 shadow-[0_25px_60px_rgba(0,0,0,0.95)] overflow-hidden">
+      
+      <!-- Watermark Background Medallions -->
+      <div class="absolute -right-24 -top-24 w-96 h-96 rounded-full border border-gold-500/10 pointer-events-none"></div>
+      <div class="absolute -left-24 -bottom-24 w-96 h-96 rounded-full border border-gold-500/10 pointer-events-none"></div>
+
+      <!-- Header Ribbon -->
+      <div class="text-center flex flex-col items-center justify-center">
+        <span class="text-xl sm:text-2xl font-arabic font-normal gold-foil-text block mb-4">
+          بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+        </span>
+        <div class="flex items-center justify-center w-full max-w-sm mx-auto mb-3 space-x-3">
+          <div class="h-[1px] flex-1 bg-gradient-to-r from-transparent to-gold-400/50"></div>
+          <span class="w-1.5 h-1.5 rotate-45 bg-gold-400"></span>
+          <div class="h-[1px] flex-1 bg-gradient-to-l from-transparent to-gold-400/50"></div>
+        </div>
+      </div>
+
+      <!-- The Couple Section -->
+      <div class="text-center my-8 space-y-2">
+        <h2 class="couple-title-main text-4xl sm:text-6xl md:text-7xl gold-foil-text drop-shadow-md">
+          Asim Abdul Ghafoor
+        </h2>
+        <div class="font-serif italic text-2xl sm:text-3xl text-gold-300/80 tracking-widest font-normal">&amp;</div>
+        <h2 class="couple-title-main text-4xl sm:text-6xl md:text-7xl gold-foil-text drop-shadow-md">
+          Sana Abdul Khaliq
+        </h2>
+        
+        <div class="font-sans text-xs sm:text-sm text-stone-300 max-w-lg mx-auto leading-relaxed pt-3 space-y-3">
+          <p class="font-medium text-gold-200/90 tracking-wide">
+            Together with their families, we warmly invite you to celebrate our Big moment. Your presence, love, and prayers mean the world to us as we begin this blessed new journey together.
+          </p>
+          <blockquote class="font-serif italic text-sm sm:text-base text-gold-100/90 bg-emerald-950/60 border-l-2 border-gold-400/80 p-3.5 rounded-r-lg max-w-md mx-auto my-2 shadow-inner">
+            &ldquo;And among His signs is that He created for you mates from among yourselves, that you may find tranquility in them; and He placed between you affection and mercy.&rdquo;
+            <cite class="block font-sans not-italic text-[11px] uppercase tracking-widest text-gold-400 mt-1.5 font-semibold">
+              &mdash; Surah Ar-Rum (30:21)
+            </cite>
+          </blockquote>
+        </div>
+      </div>
+
+      <!-- ============================================================== -->
+      <!-- REVEAL BIG DATES SECTION WITH FIREWORKS (ABOVE COUNTDOWN)      -->
+      <!-- ============================================================== -->
+      <div id="datesRevealSection" class="my-10 text-center">
+        
+        <!-- Button to Reveal the Big Dates -->
+        <div id="revealBtnWrapper" class="transition-all duration-500">
+          <button 
+            id="triggerFireworksBtn" 
+            onclick="revealBigDatesWithFireworks()" 
+            class="px-8 py-3.5 bg-gradient-to-r from-gold-500 via-gold-400 to-gold-600 text-emerald-950 font-cinzel font-bold text-xs uppercase tracking-[0.2em] rounded-full shadow-2xl hover:scale-105 active:scale-95 transition-all flex items-center justify-center space-x-2.5 mx-auto border-2 border-gold-200/50"
+          >
+            <span class="text-base">✨</span>
+            <span>Click to Reveal Wedding Dates</span>
+            <span class="text-base">🎆</span>
+          </button>
+          <span class="block text-[11px] font-cinzel text-gold-300/70 tracking-widest uppercase mt-2.5">
+            Tap to unveil the celebrations with fireworks
+          </span>
+        </div>
+
+        <!-- Big Dates Display (Revealed with animation) - 2 CARDS: BARAT, WALIMA -->
+        <div id="bigDatesContainer" class="hidden opacity-0 scale-90 transition-all duration-700">
+          <div class="mb-4">
+            <span class="text-xs uppercase tracking-[0.3em] font-cinzel text-gold-400">Save The Auspicious Dates</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
+            
+            <!-- Big Date Card 1: Barat -->
+            <div class="p-6 rounded-2xl bg-gradient-to-b from-emerald-850 to-emerald-950 border border-gold-400/40 shadow-xl flex flex-col items-center justify-center space-y-1 group hover:border-gold-400 transition">
+              <span class="text-xs uppercase tracking-[0.25em] font-cinzel text-gold-300 font-bold">The Barat</span>
+              <div class="font-serif text-6xl sm:text-7xl font-bold gold-foil-text leading-none my-1">
+                20
+              </div>
+              <div class="font-cinzel text-sm sm:text-base tracking-[0.2em] text-stone-100 font-semibold uppercase">
+                November 2026
+              </div>
+              <span class="text-xs text-gold-400/90 font-cinzel tracking-wider">Friday Evening &bull; 07:00 PM</span>
+            </div>
+
+            <!-- Big Date Card 2: Walima -->
+            <div class="p-6 rounded-2xl bg-gradient-to-b from-emerald-850 to-emerald-950 border border-gold-400/40 shadow-xl flex flex-col items-center justify-center space-y-1 group hover:border-gold-400 transition">
+              <span class="text-xs uppercase tracking-[0.25em] font-cinzel text-gold-300 font-bold">The Walima</span>
+              <div class="font-serif text-6xl sm:text-7xl font-bold gold-foil-text leading-none my-1">
+                21
+              </div>
+              <div class="font-cinzel text-sm sm:text-base tracking-[0.2em] text-stone-100 font-semibold uppercase">
+                November 2026
+              </div>
+              <span class="text-xs text-gold-400/90 font-cinzel tracking-wider">Saturday Evening &bull; 07:30 PM</span>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- COUNTDOWN TIMER (TARGET: BARAT - 20 NOVEMBER 2026) -->
+      <div class="my-10 p-5 sm:p-6 rounded-xl bg-emerald-950/70 border border-gold-400/25 backdrop-blur-sm shadow-inner">
+        <div class="text-center mb-3">
+          <span class="text-xs uppercase tracking-[0.25em] font-cinzel text-gold-300/80">Counting Down To The Barat</span>
+        </div>
+        <div class="grid grid-cols-4 gap-2 sm:gap-4 max-w-md mx-auto text-center">
+          <div class="p-3 bg-emerald-850 rounded-lg border border-gold-500/20 shadow">
+            <span id="daysVal" class="block font-cinzel text-2xl sm:text-4xl font-bold gold-foil-text">00</span>
+            <span class="text-[10px] sm:text-xs font-sans uppercase tracking-widest text-stone-400">Days</span>
+          </div>
+          <div class="p-3 bg-emerald-850 rounded-lg border border-gold-500/20 shadow">
+            <span id="hoursVal" class="block font-cinzel text-2xl sm:text-4xl font-bold gold-foil-text">00</span>
+            <span class="text-[10px] sm:text-xs font-sans uppercase tracking-widest text-stone-400">Hours</span>
+          </div>
+          <div class="p-3 bg-emerald-850 rounded-lg border border-gold-500/20 shadow">
+            <span id="minsVal" class="block font-cinzel text-2xl sm:text-4xl font-bold gold-foil-text">00</span>
+            <span class="text-[10px] sm:text-xs font-sans uppercase tracking-widest text-stone-400">Minutes</span>
+          </div>
+          <div class="p-3 bg-emerald-850 rounded-lg border border-gold-500/20 shadow">
+            <span id="secsVal" class="block font-cinzel text-2xl sm:text-4xl font-bold gold-foil-text">00</span>
+            <span class="text-[10px] sm:text-xs font-sans uppercase tracking-widest text-stone-400">Seconds</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- WEDDING EVENTS: BARAT & WALIMA -->
+      <section id="events" class="my-14 space-y-10">
+        <div class="text-center">
+          <span class="text-xs uppercase tracking-[0.25em] font-cinzel text-gold-400">Wedding Celebrations</span>
+          <h3 class="font-serif text-3xl sm:text-4xl text-stone-100 font-normal mt-1">Event Schedule</h3>
+          
+          <!-- Note to be on time -->
+          <div class="mt-3.5 inline-flex items-center justify-center space-x-2 px-5 py-2 rounded-full bg-emerald-950/90 border border-gold-400/40 text-gold-200 text-xs font-cinzel tracking-wider shadow-md">
+            <span class="text-gold-400">⏰</span>
+            <span>Kindly make sure to be on time to share every moment with us.</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          
+          <!-- DAY 01: BARAT -->
+          <div class="p-7 rounded-xl bg-emerald-850/80 border border-gold-400/30 flex flex-col justify-between space-y-5 hover:border-gold-400/60 transition">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-3 py-1 rounded-full bg-emerald-950/80 border border-gold-400/40 text-[10px] font-cinzel uppercase tracking-widest text-gold-300">
+                  Day 01
+                </span>
+                <span class="font-cinzel text-xs text-gold-400 font-semibold">Friday</span>
+              </div>
+              <h4 class="font-serif text-3xl text-gold-100 font-medium">The Barat</h4>
+              <p class="text-xs sm:text-sm text-stone-300 leading-relaxed pt-1">
+                Join us for the vibrant Barat procession, grand reception dinner, and emotional Rukhsati farewell.
+              </p>
+            </div>
+
+            <div class="pt-4 border-t border-gold-500/20 space-y-2 text-xs text-stone-300">
+              <p class="flex items-center text-gold-200">
+                <span class="w-1.5 h-1.5 rounded-full bg-gold-400 mr-2"></span>
+                <strong>Function Timing:</strong>&nbsp;06:00 PM to 09:30 PM
+              </p>
+              <p class="flex items-center text-gold-200">
+                <span class="w-1.5 h-1.5 rounded-full bg-gold-400 mr-2"></span>
+                <strong>Barat Arrival:</strong>&nbsp;06:00 PM
+              </p>
+              <p class="flex items-center text-gold-200">
+                <span class="w-1.5 h-1.5 rounded-full bg-gold-400 mr-2"></span>
+                <strong>Dinner &amp; Rukhsati:</strong>&nbsp;08:00 PM
+              </p>
+            </div>
+          </div>
+
+          <!-- DAY 02: WALIMA -->
+          <div class="p-7 rounded-xl bg-emerald-850/80 border border-gold-400/30 flex flex-col justify-between space-y-5 hover:border-gold-400/60 transition">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-3 py-1 rounded-full bg-emerald-950/80 border border-gold-400/40 text-[10px] font-cinzel uppercase tracking-widest text-gold-300">
+                  Day 02
+                </span>
+                <span class="font-cinzel text-xs text-gold-400 font-semibold">Saturday</span>
+              </div>
+              <h4 class="font-serif text-3xl text-gold-100 font-medium">The Walima</h4>
+              <p class="text-xs sm:text-sm text-stone-300 leading-relaxed pt-1">
+                A joyful reception dinner hosted by the groom's family to share blessings, happiness, and delicious food with loved ones.
+              </p>
+            </div>
+
+            <div class="pt-4 border-t border-gold-500/20 space-y-2 text-xs text-stone-300">
+              <p class="flex items-center text-gold-200">
+                <span class="w-1.5 h-1.5 rounded-full bg-gold-400 mr-2"></span>
+                <strong>Function Timing:</strong>&nbsp;06:00 PM to 09:30 PM
+              </p>
+              <p class="flex items-center text-gold-200">
+                <span class="w-1.5 h-1.5 rounded-full bg-gold-400 mr-2"></span>
+                <strong>Guest Welcome:</strong>&nbsp;06:00 PM
+              </p>
+              <p class="flex items-center text-gold-200">
+                <span class="w-1.5 h-1.5 rounded-full bg-gold-400 mr-2"></span>
+                <strong>Dinner:</strong>&nbsp;08:00 PM
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- VENUES & LOCATION SECTION -->
+      <section id="venues" class="my-14 p-6 sm:p-8 rounded-xl bg-emerald-950/70 border border-gold-400/30">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          <div>
+            <span class="text-xs uppercase tracking-[0.2em] font-cinzel text-gold-400 block mb-2">Venues &amp; Directions</span>
+            <h3 class="font-serif text-2xl sm:text-3xl text-stone-100 font-bold">Event Locations</h3>
+            <p class="text-xs sm:text-sm text-stone-300 mt-2 leading-relaxed">
+              Tap the map buttons below to easily open live GPS directions to the celebration venues:
+            </p>
+
+            <!-- Location buttons + Calendar invite -->
+            <div class="mt-6 flex flex-col sm:flex-row flex-wrap gap-3">
+              <!-- Barat Venue Map (Mobile Universal Deep-link) -->
+              <a 
+                href="https://maps.app.goo.gl/cK4iMa1Kep7n7v1a8" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                class="inline-flex items-center justify-center space-x-2 bg-emerald-850 border border-gold-500/50 text-gold-200 px-4 py-2.5 rounded-lg text-xs font-cinzel tracking-wider hover:bg-emerald-800 hover:border-gold-300 transition shadow"
+              >
+                <svg class="w-4 h-4 text-gold-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span>Barat Location Map</span>
+              </a>
+
+              <!-- Walima Venue Map (Mobile Universal Deep-link) -->
+              <a 
+                href="https://maps.app.goo.gl/EE8u6Ts4G77uU4gi8" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                class="inline-flex items-center justify-center space-x-2 bg-emerald-850 border border-gold-500/50 text-gold-200 px-4 py-2.5 rounded-lg text-xs font-cinzel tracking-wider hover:bg-emerald-800 hover:border-gold-300 transition shadow"
+              >
+                <svg class="w-4 h-4 text-gold-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span>Walima Location Map</span>
+              </a>
+
+              <!-- Add to Calendar Button -->
+              <button 
+                onclick="downloadCalendarInvite()" 
+                class="inline-flex items-center justify-center space-x-2 bg-emerald-850/70 border border-gold-500/30 text-gold-200 px-4 py-2.5 rounded-lg text-xs font-cinzel tracking-wider hover:bg-emerald-800 transition"
+              >
+                <svg class="w-4 h-4 text-gold-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <span>Add To Calendar</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="border-t md:border-t-0 md:border-l border-gold-500/20 pt-6 md:pt-0 md:pl-8 space-y-3">
+            <h4 class="font-cinzel text-xs uppercase tracking-widest text-gold-300">Dress Code</h4>
+            <p class="font-serif italic text-2xl text-stone-100">Formal Traditional or Evening Wear</p>
+            <p class="text-xs text-stone-300 leading-relaxed">
+              We warmly look forward to celebrating together in festive formal attire.
+            </p>
+          </div>
+        </div>
+
+      <!-- CALL TO ACTION (RSVP) & CONTACT NUMBERS -->
+      <div class="text-center pt-8 border-t border-gold-400/20 space-y-8 mt-6">
+        <div>
+          <p class="font-serif italic text-lg text-gold-200 mb-4">Your presence would complete our happiness</p>
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLSd-Grwo1IswhqHV7aUuLnQL2YEsvdHROZ14lOiK3tAh6MrhYw/viewform?usp=publish-editor" target="_blank" rel="noopener noreferrer" class="inline-block px-8 py-3.5 bg-gradient-to-r from-gold-400 via-gold-500 to-gold-600 text-emerald-950 font-cinzel font-bold text-sm tracking-[0.2em] rounded-full shadow-2xl hover:scale-105 transition transform">
+            Confirm Your Attendance (RSVP)
+          </a>
+          <p class="text-[11px] font-sans text-gold-400/70 mt-3">Kindly respond before November 1, 2026</p>
+        </div>
+
+        <!-- Contact / RSVP Phone Numbers Section -->
+        <div class="pt-6 border-t border-gold-500/20">
+          <span class="text-xs uppercase tracking-[0.25em] font-cinzel text-gold-400 block mb-2">For Queries &amp; RSVP Contact</span>
+          <h4 class="font-serif text-xl sm:text-2xl text-stone-100 mb-4">Contact Information</h4>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-3xl mx-auto">
+            <a href="tel:03104942561" class="flex items-center justify-center space-x-2.5 p-3 rounded-xl bg-emerald-950/80 border border-gold-500/30 hover:border-gold-400 hover:bg-emerald-850/90 transition text-gold-200 text-xs sm:text-sm font-sans tracking-wider shadow">
+              <svg class="w-4 h-4 text-gold-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+              </svg>
+              <span>0310-4942561</span>
+            </a>
+
+            <a href="tel:03064100759" class="flex items-center justify-center space-x-2.5 p-3 rounded-xl bg-emerald-950/80 border border-gold-500/30 hover:border-gold-400 hover:bg-emerald-850/90 transition text-gold-200 text-xs sm:text-sm font-sans tracking-wider shadow">
+              <svg class="w-4 h-4 text-gold-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+              </svg>
+              <span>0306-4100759</span>
+            </a>
+
+            <a href="tel:03134811013" class="flex items-center justify-center space-x-2.5 p-3 rounded-xl bg-emerald-950/80 border border-gold-500/30 hover:border-gold-400 hover:bg-emerald-850/90 transition text-gold-200 text-xs sm:text-sm font-sans tracking-wider shadow">
+              <svg class="w-4 h-4 text-gold-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+              </svg>
+              <span>0313-4811013</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </article>
+
+    <!-- FOOTER -->
+    <footer class="text-center mt-12 mb-16 text-stone-400 text-xs font-cinzel space-y-2">
+      <p class="gold-foil-subtle tracking-widest text-sm">
+        Asim Abdul Ghafoor &amp; Sana Abdul Khaliq
+      </p>
+      <p>#AsimAndSana2026 &bull; With Warm Gratitude</p>
+    </footer>
+
+  </main>
+
+  <!-- ============================================================== -->
+  <!-- 3. INTERACTIVE RSVP MODAL WITH CUSTOM TOTAL GUEST OPTION       -->
+  <!-- ============================================================== -->
+  <div id="rsvpModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
+    <div class="relative w-full max-w-lg bg-emerald-900 border border-gold-400/40 rounded-2xl p-6 sm:p-8 shadow-2xl transform scale-95 transition-transform duration-300" id="rsvpModalBox">
+      
+      <!-- Close button -->
+      <button onclick="closeRsvpModal()" class="absolute top-4 right-4 text-gold-300/70 hover:text-gold-200">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      <div class="text-center mb-6">
+        <h3 class="font-cinzel text-2xl text-gold-300 font-bold">RSVP Card</h3>
+        <p class="text-xs text-stone-300 mt-1 font-sans">Please let us know if you will celebrate with us</p>
+      </div>
+
+      <form id="rsvpForm" onsubmit="handleRsvpSubmit(event)" class="space-y-4 text-left">
+        <div>
+          <label class="block text-xs font-cinzel uppercase tracking-wider text-gold-300 mb-1">Full Name</label>
+          <input type="text" required placeholder="Guest / Family Name" class="w-full bg-emerald-950 border border-gold-500/30 rounded-lg px-3.5 py-2.5 text-sm text-stone-100 placeholder-stone-500 focus:outline-none focus:border-gold-400">
+        </div>
+
+        <div>
+          <label class="block text-xs font-cinzel uppercase tracking-wider text-gold-300 mb-1">Response</label>
+          <div class="grid grid-cols-2 gap-3">
+            <label class="flex items-center space-x-2 bg-emerald-950 border border-gold-500/30 rounded-lg p-2.5 cursor-pointer hover:border-gold-400">
+              <input type="radio" name="attendance" value="accept" checked class="text-gold-500 focus:ring-0">
+              <span class="text-xs text-stone-200 font-medium">Joyfully Accepts</span>
+            </label>
+            <label class="flex items-center space-x-2 bg-emerald-950 border border-gold-500/30 rounded-lg p-2.5 cursor-pointer hover:border-gold-400">
+              <input type="radio" name="attendance" value="decline" class="text-gold-500 focus:ring-0">
+              <span class="text-xs text-stone-200 font-medium">Regretfully Declines</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-cinzel uppercase tracking-wider text-gold-300 mb-1">Events Attending</label>
+            <select class="w-full bg-emerald-950 border border-gold-500/30 rounded-lg px-3 py-2.5 text-sm text-stone-100 focus:outline-none focus:border-gold-400">
+              <option value="all">All Events (Barat &amp; Walima)</option>
+              <option value="barat">Barat Only (20 Nov)</option>
+              <option value="walima">Walima Only (21 Nov)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-cinzel uppercase tracking-wider text-gold-300 mb-1">Total Guests</label>
+            <select id="guestSelect" onchange="handleGuestCountChange(this.value)" class="w-full bg-emerald-950 border border-gold-500/30 rounded-lg px-3 py-2.5 text-sm text-stone-100 focus:outline-none focus:border-gold-400">
+              <option value="1">1 Guest</option>
+              <option value="2">2 Guests</option>
+              <option value="3">3 Guests</option>
+              <option value="4">4 Guests</option>
+              <option value="5">5 Guests</option>
+              <option value="custom">Custom Number...</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Dynamic Custom Total Guest Input -->
+        <div id="customGuestInputWrapper" class="hidden transition-all duration-300 p-3 rounded-lg bg-emerald-950/90 border border-gold-400/40">
+          <label class="block text-xs font-cinzel uppercase tracking-wider text-gold-300 mb-1">
+            Specify Total Guests
+          </label>
+          <div class="flex items-center space-x-2">
+            <input 
+              type="number" 
+              id="customGuestInput" 
+              name="customGuestCount" 
+              min="1" 
+              max="100" 
+              placeholder="e.g. 6" 
+              class="w-full bg-emerald-900 border border-gold-500/40 rounded-lg px-3.5 py-2 text-sm text-stone-100 placeholder-stone-500 focus:outline-none focus:border-gold-300"
+            />
+            <span class="text-xs font-cinzel text-gold-400/80 whitespace-nowrap">Guests</span>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-cinzel uppercase tracking-wider text-gold-300 mb-1">Warm Wishes &amp; Blessings</label>
+          <textarea rows="3" placeholder="Leave a heartfelt message for Asim & Sana..." class="w-full bg-emerald-950 border border-gold-500/30 rounded-lg px-3 py-2 text-sm text-stone-100 placeholder-stone-500 focus:outline-none focus:border-gold-400"></textarea>
+        </div>
+
+        <button type="submit" class="w-full py-3 bg-gradient-to-r from-gold-400 to-gold-600 text-emerald-950 font-cinzel font-bold text-xs uppercase tracking-widest rounded-lg shadow-lg hover:brightness-110 transition">
+          Submit Response
+        </button>
+      </form>
+
+      <!-- Confirmation view -->
+      <div id="rsvpSuccessMsg" class="hidden text-center py-8 space-y-4">
+        <div class="w-16 h-16 mx-auto rounded-full bg-emerald-800 border-2 border-gold-400 flex items-center justify-center">
+          <svg class="w-8 h-8 text-gold-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <h4 class="font-serif text-3xl text-gold-200">Thank You!</h4>
+        <p class="text-xs sm:text-sm text-stone-300 max-w-sm mx-auto">Your response has been saved. We look forward to celebrating together.</p>
+        <button onclick="closeRsvpModal()" class="px-6 py-2 border border-gold-400 text-gold-200 font-cinzel text-xs rounded-full hover:bg-gold-500 hover:text-emerald-950 transition">
+          Close
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- JAVASCRIPT: GOLD PARTICLES, FIREWORKS, AUDIO & ACTIONS         -->
+  <!-- ============================================================== -->
+  <script>
+    /* ----------------------------------------------------
+       1. AMBIENT ROYAL GOLD DUST PARTICLES
+    ---------------------------------------------------- */
+    const dustCanvas = document.getElementById('dustCanvas');
+    const dustCtx = dustCanvas.getContext('2d');
+    let width = (dustCanvas.width = window.innerWidth);
+    let height = (dustCanvas.height = window.innerHeight);
+
+    const particles = [];
+    const particleCount = Math.min(Math.floor(window.innerWidth / 20), 45);
+
+    class DustParticle {
+      constructor() {
+        this.reset();
+      }
+      reset() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.size = Math.random() * 2.0 + 0.6;
+        this.speedX = (Math.random() - 0.5) * 0.35;
+        this.speedY = -Math.random() * 0.45 - 0.15;
+        this.alpha = Math.random() * 0.6 + 0.2;
+      }
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        if (this.y < -10 || this.x < -10 || this.x > width + 10) {
+          this.reset();
+          this.y = height + 5;
+        }
+      }
+      draw() {
+        dustCtx.beginPath();
+        dustCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        dustCtx.fillStyle = `rgba(242, 214, 138, ${this.alpha})`;
+        dustCtx.shadowBlur = 8;
+        dustCtx.shadowColor = '#e2be56';
+        dustCtx.fill();
+      }
+    }
+
+    for (let i = 0; i < particleCount; i++) {
+      particles.push(new DustParticle());
+    }
+
+    function animateDust() {
+      dustCtx.clearRect(0, 0, width, height);
+      particles.forEach((p) => {
+        p.update();
+        p.draw();
+      });
+      requestAnimationFrame(animateDust);
+    }
+    animateDust();
+
+    /* ----------------------------------------------------
+       2. CELEBRATORY FIREWORKS ENGINE (ROYAL GOLD PALETTE)
+    ---------------------------------------------------- */
+    const fwCanvas = document.getElementById('fireworksCanvas');
+    const fwCtx = fwCanvas.getContext('2d');
+    fwCanvas.width = window.innerWidth;
+    fwCanvas.height = window.innerHeight;
+
+    let fireworksActive = false;
+    let fwSparks = [];
+
+    class Spark {
+      constructor(x, y, color) {
+        this.x = x;
+        this.y = y;
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 5 + 2;
+        this.vx = Math.cos(angle) * speed;
+        this.vy = Math.sin(angle) * speed;
+        this.friction = 0.95;
+        this.gravity = 0.08;
+        this.alpha = 1;
+        this.decay = Math.random() * 0.015 + 0.012;
+        this.color = color;
+        this.size = Math.random() * 2.8 + 1.2;
+      }
+      update() {
+        this.vx *= this.friction;
+        this.vy *= this.friction;
+        this.vy += this.gravity;
+        this.x += this.vx;
+        this.y += this.vy;
+        this.alpha -= this.decay;
+      }
+      draw() {
+        fwCtx.save();
+        fwCtx.globalAlpha = Math.max(0, this.alpha);
+        fwCtx.fillStyle = this.color;
+        fwCtx.shadowBlur = 6;
+        fwCtx.shadowColor = this.color;
+        fwCtx.beginPath();
+        fwCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        fwCtx.fill();
+        fwCtx.restore();
+      }
+    }
+
+    function createFireworkBurst(originX, originY) {
+      const palette = ['#fff2d1', '#f7ebbe', '#eed68a', '#e2be56', '#d2a42f', '#ffffff', '#6ee7b7', '#a7f3d0'];
+      const count = 75;
+      for (let i = 0; i < count; i++) {
+        const color = palette[Math.floor(Math.random() * palette.length)];
+        fwSparks.push(new Spark(originX, originY, color));
+      }
+    }
+
+    function runFireworksLoop() {
+      if (!fireworksActive && fwSparks.length === 0) {
+        fwCtx.clearRect(0, 0, fwCanvas.width, fwCanvas.height);
+        return;
+      }
+
+      fwCtx.clearRect(0, 0, fwCanvas.width, fwCanvas.height);
+      for (let i = fwSparks.length - 1; i >= 0; i--) {
+        const s = fwSparks[i];
+        s.update();
+        s.draw();
+        if (s.alpha <= 0) {
+          fwSparks.splice(i, 1);
+        }
+      }
+
+      requestAnimationFrame(runFireworksLoop);
+    }
+
+    function launchCelebrationFireworks() {
+      fireworksActive = true;
+      runFireworksLoop();
+
+      const bursts = [
+        { x: window.innerWidth * 0.5, y: window.innerHeight * 0.35, delay: 0 },
+        { x: window.innerWidth * 0.3, y: window.innerHeight * 0.45, delay: 250 },
+        { x: window.innerWidth * 0.7, y: window.innerHeight * 0.4, delay: 500 },
+        { x: window.innerWidth * 0.4, y: window.innerHeight * 0.28, delay: 850 },
+        { x: window.innerWidth * 0.6, y: window.innerHeight * 0.32, delay: 1200 },
+        { x: window.innerWidth * 0.5, y: window.innerHeight * 0.42, delay: 1550 }
+      ];
+
+      bursts.forEach(b => {
+        setTimeout(() => {
+          createFireworkBurst(b.x, b.y);
+        }, b.delay);
+      });
+
+      setTimeout(() => {
+        fireworksActive = false;
+      }, 3500);
+    }
+
+    function revealBigDatesWithFireworks() {
+      launchCelebrationFireworks();
+
+      const btnWrapper = document.getElementById('revealBtnWrapper');
+      btnWrapper.style.opacity = '0';
+      btnWrapper.style.transform = 'scale(0.8)';
+
+      setTimeout(() => {
+        btnWrapper.classList.add('hidden');
+        const bigDates = document.getElementById('bigDatesContainer');
+        bigDates.classList.remove('hidden');
+        
+        setTimeout(() => {
+          bigDates.classList.remove('opacity-0', 'scale-90');
+          bigDates.classList.add('opacity-100', 'scale-100');
+        }, 50);
+      }, 400);
+    }
+
+    window.addEventListener('resize', () => {
+      width = dustCanvas.width = fwCanvas.width = window.innerWidth;
+      height = dustCanvas.height = fwCanvas.height = window.innerHeight;
+    });
+
+    /* ----------------------------------------------------
+       3. BISMILLAH AUDIO RECITATION ENGINE
+    ---------------------------------------------------- */
+    const bismillahAudioEl = new Audio('audio/bismillah.mp3');
+bismillahAudioEl.preload = 'auto';
+
+const weddingMusicEl = new Audio('audio/wedding-music.mp3');
+weddingMusicEl.loop = true;
+weddingMusicEl.volume = 0;
+weddingMusicEl.preload = 'auto';
+
+const bismillahBadge = document.getElementById('bismillahAudioBadge');
+const musicToggleButton = document.getElementById('musicToggleButton');
+let badgeTimer;
+let musicFadeInterval;
+
+const WEDDING_MUSIC_VOLUME = 0.18;
+const MUSIC_FADE_TIME = 4000;
+
+function hideBismillahBadge() {
+  if (!bismillahBadge) return;
+
+  clearTimeout(badgeTimer);
+  bismillahBadge.classList.add('opacity-0');
+
+  badgeTimer = setTimeout(() => {
+    bismillahBadge.classList.add('hidden');
+  }, 500);
+}
+
+bismillahAudioEl.addEventListener('playing', () => {
+  if (!bismillahBadge) return;
+
+  clearTimeout(badgeTimer);
+  bismillahBadge.classList.remove('hidden');
+
+  requestAnimationFrame(() => {
+    bismillahBadge.classList.remove('opacity-0');
+  });
+});
+
+bismillahAudioEl.addEventListener('ended', () => {
+  hideBismillahBadge();
+  playWeddingMusic();
+});
+
+bismillahAudioEl.addEventListener('error', hideBismillahBadge);
+
+function playBismillahRecitation() {
+  bismillahAudioEl.currentTime = 0;
+
+  bismillahAudioEl.play().catch((error) => {
+    hideBismillahBadge();
+    console.warn('Bismillah audio could not play:', error);
+  });
+}
+
+function fadeInWeddingMusic() {
+  clearInterval(musicFadeInterval);
+
+  weddingMusicEl.volume = 0;
+
+  let currentVolume = 0;
+  const steps = 40;
+  const volumeStep = WEDDING_MUSIC_VOLUME / steps;
+  const delay = MUSIC_FADE_TIME / steps;
+
+  musicFadeInterval = setInterval(() => {
+    currentVolume += volumeStep;
+
+    if (currentVolume >= WEDDING_MUSIC_VOLUME) {
+      weddingMusicEl.volume = WEDDING_MUSIC_VOLUME;
+      clearInterval(musicFadeInterval);
+      return;
+    }
+
+    weddingMusicEl.volume = currentVolume;
+  }, delay);
+}
+
+function playWeddingMusic() {
+  weddingMusicEl
+    .play()
+    .then(() => {
+      fadeInWeddingMusic();
+      updateMusicButton();
+    })
+    .catch((error) => {
+      console.warn('Wedding music could not play:', error);
+    });
+}
+
+function stopWeddingMusic() {
+  clearInterval(musicFadeInterval);
+  weddingMusicEl.pause();
+  weddingMusicEl.currentTime = 0;
+  weddingMusicEl.volume = 0;
+
+  if (musicToggleButton) {
+    musicToggleButton.textContent = '🔇';
+  }
+}
+
+function updateMusicButton() {
+  if (!musicToggleButton) return;
+
+  musicToggleButton.textContent = weddingMusicEl.paused ? '🔇' : '🔊';
+}
+
+if (musicToggleButton) {
+  musicToggleButton.addEventListener('click', () => {
+    if (weddingMusicEl.paused) {
+      weddingMusicEl
+        .play()
+        .then(() => {
+          fadeInWeddingMusic();
+          updateMusicButton();
+        })
+        .catch((error) => {
+          console.warn('Wedding music could not play:', error);
+        });
+    } else {
+      clearInterval(musicFadeInterval);
+      weddingMusicEl.pause();
+      updateMusicButton();
+    }
+  });
+} else {
+  console.warn('Music button not found. Check id="musicToggleButton".');
+}   
+
+    /* ----------------------------------------------------
+       4. UNSEAL REVEAL TRANSITION
+    ---------------------------------------------------- */
+    const breakSealBtn = document.getElementById('breakSealBtn');
+    const skipBtn = document.getElementById('skipEnvelopeBtn');
+    const frontPageCover = document.getElementById('frontPageCover');
+    const mainInvitation = document.getElementById('mainInvitation');
+
+    function revealInvitation() {
+  playBismillahRecitation();
+
+      breakSealBtn.style.transform = 'scale(0.85) rotate(25deg)';
+      breakSealBtn.style.opacity = '0.6';
+
+      setTimeout(() => {
+        frontPageCover.style.opacity = '0';
+        setTimeout(() => {
+          frontPageCover.classList.add('hidden');
+          mainInvitation.classList.remove('hidden');
+      
+  if (musicToggleButton) {
+  musicToggleButton.classList.remove('hidden');
+   }
+          setTimeout(() => {
+            mainInvitation.classList.remove('opacity-0', 'translate-y-8');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }, 50);
+        }, 800);
+      }, 600);
+    }
+
+function returnToFrontPage() {
+  stopWeddingMusic();
+
+  if (musicToggleButton) {
+    musicToggleButton.classList.add('hidden');
+  }
+      
+      mainInvitation.classList.add('opacity-0', 'translate-y-8');
+      setTimeout(() => {
+        mainInvitation.classList.add('hidden');
+        frontPageCover.classList.remove('hidden');
+        setTimeout(() => {
+          frontPageCover.style.opacity = '1';
+          breakSealBtn.style.transform = 'scale(1) rotate(0deg)';
+          breakSealBtn.style.opacity = '1';
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 50);
+      }, 500);
+    }
+
+    breakSealBtn.addEventListener('click', revealInvitation);
+    skipBtn.addEventListener('click', revealInvitation);
+
+    /* ----------------------------------------------------
+       5. COUNTDOWN TO BARAT (20 NOVEMBER 2026, 6:00 PM)
+    ---------------------------------------------------- */
+    const targetDate = new Date('2026-11-20T18:00:00').getTime();
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const difference = targetDate - now;
+
+      if (difference > 0) {
+        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+        document.getElementById('daysVal').innerText = String(days).padStart(2, '0');
+        document.getElementById('hoursVal').innerText = String(hours).padStart(2, '0');
+        document.getElementById('minsVal').innerText = String(minutes).padStart(2, '0');
+        document.getElementById('secsVal').innerText = String(seconds).padStart(2, '0');
+      } else {
+        document.getElementById('daysVal').innerText = '00';
+        document.getElementById('hoursVal').innerText = '00';
+        document.getElementById('minsVal').innerText = '00';
+        document.getElementById('secsVal').innerText = '00';
+      }
+    }
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    /* ----------------------------------------------------
+       6. RSVP MODAL INTERACTIONS & CUSTOM GUEST LOGIC
+    ---------------------------------------------------- */
+    const rsvpModal = document.getElementById('rsvpModal');
+    const rsvpModalBox = document.getElementById('rsvpModalBox');
+    const rsvpForm = document.getElementById('rsvpForm');
+    const rsvpSuccessMsg = document.getElementById('rsvpSuccessMsg');
+
+    function openRsvpModal() {
+      window.open('https://docs.google.com/forms/d/e/1FAIpQLSd-Grwo1IswhqHV7aUuLnQL2YEsvdHROZ14lOiK3tAh6MrhYw/viewform?usp=publish-editor', '_blank');
+    }
+
+    function closeRsvpModal() {
+      rsvpModal.classList.add('opacity-0');
+      rsvpModalBox.classList.add('scale-95');
+      setTimeout(() => {
+        rsvpModal.classList.add('hidden');
+        rsvpForm.classList.remove('hidden');
+        rsvpSuccessMsg.classList.add('hidden');
+      }, 300);
+    }
+
+    function handleRsvpSubmit(e) {
+      e.preventDefault();
+      rsvpForm.classList.add('hidden');
+      rsvpSuccessMsg.classList.remove('hidden');
+    }
+
+    function handleGuestCountChange(val) {
+      const wrapper = document.getElementById('customGuestInputWrapper');
+      if (val === 'custom') {
+        wrapper.classList.remove('hidden');
+      } else {
+        wrapper.classList.add('hidden');
+      }
+    }
+
+    /* ----------------------------------------------------
+       7. CALENDAR EVENT (.ICS) GENERATOR
+    ---------------------------------------------------- */
+    function downloadCalendarInvite() {
+      const icsData = 
+`BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Asim and Sana Wedding//EN
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+SUMMARY:Wedding of Asim Abdul Ghafoor & Sana Abdul Khaliq - Barat
+DESCRIPTION:Barat ceremony and celebrations for Asim Abdul Ghafoor and Sana Abdul Khaliq.
+LOCATION:https://maps.app.goo.gl/cK4iMa1Kep7n7v1a8
+DTSTART:20261120T130000Z
+DTEND:20261120T163000Z
+STATUS:CONFIRMED
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Wedding of Asim Abdul Ghafoor & Sana Abdul Khaliq - Walima
+DESCRIPTION:Walima reception and banquet for Asim Abdul Ghafoor and Sana Abdul Khaliq.
+LOCATION:https://maps.app.goo.gl/EE8u6Ts4G77uU4gi8
+DTSTART:20261121T130000Z
+DTEND:20261121T163000Z
+STATUS:CONFIRMED
+END:VEVENT
+END:VCALENDAR`;
+
+      const blob = new Blob([icsData], { type: 'text/calendar;charset=utf-8' });
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.setAttribute('download', 'Asim-and-Sana-Wedding.ics');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  </script>
+</body>
+</html>
