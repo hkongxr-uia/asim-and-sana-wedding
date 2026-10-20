@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
-import { ArrowDown, ArrowUpRight, CalendarDays, Check, MapPin, Phone, Play, Sparkles, Star } from 'lucide-react';
+import { ArrowDown, ArrowLeft, ArrowUpRight, CalendarDays, Clock3, MapPin, Phone, Play, Sparkles, Star } from 'lucide-react';
 import introVideoWebm from '@assets/0_intro_1792477792582.webm';
 import introVideoMp4 from '@assets/0_intro_1792477792582.mp4';
 import introPoster from '@assets/0_intro_1792477792582-poster.jpg';
@@ -11,7 +11,7 @@ const rsvpUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSd-Grwo1IswhqHV7aUuLnQ
 const contacts = ['0310-4942561', '0306-4100759', '0313-4811013'];
 
 function timeUntilBaraat() {
-  const baraatStart = Date.UTC(2026, 10, 20, 0, 0, 0) - 5 * 60 * 60 * 1000;
+  const baraatStart = Date.UTC(2026, 10, 20, 13, 0, 0);
   const remaining = Math.max(0, baraatStart - Date.now());
   return {
     days: Math.floor(remaining / 86_400_000),
@@ -61,14 +61,14 @@ function ScratchReveal({ onReveal, revealed }: { onReveal: () => void; revealed:
         context.fill();
       }
     }
-    context.fillStyle = '#284c38';
+    context.fillStyle = '#3b2b08';
     context.textAlign = 'center';
     context.textBaseline = 'middle';
-    context.font = '600 11px "DM Sans", sans-serif';
+    context.font = '600 11px Montserrat, sans-serif';
     context.fillText('SCRATCH TO REVEAL', rect.width / 2, rect.height / 2 - 7);
     context.font = '22px "Cormorant Garamond", serif';
     context.fillText('Two days, one beautiful beginning', rect.width / 2, rect.height / 2 + 18);
-    context.font = '10px "DM Sans", sans-serif';
+    context.font = '10px Montserrat, sans-serif';
     context.fillText('USE A FINGER OR MOUSE', rect.width / 2, rect.height / 2 + 42);
   }, [revealed]);
 
@@ -162,6 +162,41 @@ function StarPointer() {
   );
 }
 
+function makeCalendarFile() {
+  const calendar = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Asim and Sana//Wedding Invitation//EN',
+    'CALSCALE:GREGORIAN',
+    'BEGIN:VEVENT',
+    'UID:asim-sana-baraat-20261120@example.com',
+    'DTSTAMP:20261001T000000Z',
+    'DTSTART:20261120T130000Z',
+    'DTEND:20261120T163000Z',
+    'SUMMARY:Baraat — Asim and Sana',
+    'LOCATION:Ahmad Marriage Hall',
+    'DESCRIPTION:Function 6:00–9:30 PM. Arrival 6:00 PM. Dinner and Rukhsati 8:00 PM.',
+    'END:VEVENT',
+    'BEGIN:VEVENT',
+    'UID:asim-sana-walima-20261121@example.com',
+    'DTSTAMP:20261001T000000Z',
+    'DTSTART:20261121T130000Z',
+    'DTEND:20261121T163000Z',
+    'SUMMARY:Walima — Asim and Sana',
+    'LOCATION:Bhatti Marriage Hall',
+    'DESCRIPTION:Function 6:00–9:30 PM. Guest welcome 6:00 PM. Dinner 8:00 PM.',
+    'END:VEVENT',
+    'END:VCALENDAR',
+  ].join('\r\n');
+  const blob = new Blob([calendar], { type: 'text/calendar;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.download = 'asim-and-sana-wedding.ics';
+  anchor.click();
+  URL.revokeObjectURL(url);
+}
+
 function App() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [invitationOpen, setInvitationOpen] = useState(false);
@@ -178,10 +213,7 @@ function App() {
   async function startFilm() {
     setPlaybackFailed(false);
     const video = videoRef.current;
-    if (!video) {
-      setPlaybackFailed(true);
-      return;
-    }
+    if (!video) return setPlaybackFailed(true);
     try {
       await video.play();
       setPlaying(true);
@@ -189,6 +221,23 @@ function App() {
       setPlaybackFailed(true);
       setPlaying(false);
     }
+  }
+
+  function openInvitation() {
+    setInvitationOpen(true);
+    window.setTimeout(() => document.getElementById('couple-title')?.focus(), 250);
+  }
+
+  function returnToCover() {
+    const video = videoRef.current;
+    if (video) {
+      video.pause();
+      video.currentTime = 0;
+    }
+    setPlaying(false);
+    setPlaybackFailed(false);
+    setInvitationOpen(false);
+    window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
   }
 
   return (
@@ -208,7 +257,7 @@ function App() {
           aria-label="A personal opening film for Asim and Sana"
           data-testid="video-opening-film"
           onClick={startFilm}
-          onEnded={() => setInvitationOpen(true)}
+          onEnded={() => { setInvitationOpen(true); setPlaying(false); }}
           onError={() => setPlaybackFailed(true)}
           onPlay={() => setPlaying(true)}
         >
@@ -217,106 +266,79 @@ function App() {
         </video>
         <div className="intro-vignette" />
         <div className="intro-controls">
-          {playbackFailed && (
-            <p className="intro-instruction" role="status" data-testid="status-video-unavailable">
-              The film could not be played. You can still open the invitation.
-            </p>
-          )}
+          {playbackFailed && <p className="intro-instruction" role="status" data-testid="status-video-unavailable">The film could not be played. You can still open the invitation.</p>}
           {!playing && !playbackFailed && <p className="intro-instruction">A moment made for you</p>}
           {playing && <p className="intro-instruction">Enjoy the film</p>}
           {!playing && (
             <button className="intro-play" type="button" onClick={startFilm} data-testid="button-play-film">
-              <Play size={15} fill="currentColor" />
-              {playbackFailed ? 'Try the film again' : 'Tap to begin'}
+              <Play size={15} fill="currentColor" />{playbackFailed ? 'Try the film again' : 'Tap to begin'}
             </button>
           )}
-          <button
-            type="button"
-            className="intro-skip"
-            onClick={() => setInvitationOpen(true)}
-            data-testid="button-skip-film"
-          >
+          <button type="button" className="intro-skip" onClick={openInvitation} data-testid="button-skip-film">
             {playing ? 'Skip to invitation' : 'Open invitation'}
           </button>
         </div>
       </section>
 
       <div className="page-shell">
-        <section className="hero-section" aria-labelledby="couple-title" data-testid="section-hero">
-          <div className="hero-ornament" aria-hidden="true" />
-          <div className="hero-content">
+        <nav className="site-nav" aria-label="Invitation navigation" data-testid="navigation-main">
+          <button className="nav-cover" onClick={returnToCover} type="button" data-testid="button-return-to-cover">
+            <ArrowLeft size={14} /> <span>Cover</span>
+          </button>
+          <a href="#events" data-testid="link-nav-events">Events</a>
+          <a href="#venues" data-testid="link-nav-venues">Venues</a>
+          <a className="nav-rsvp" href={rsvpUrl} target="_blank" rel="noreferrer" data-testid="link-nav-rsvp">RSVP</a>
+        </nav>
+
+        <article className="invitation-card" data-testid="card-main-invitation">
+          <div className="medallion medallion-top" aria-hidden="true" />
+          <div className="medallion medallion-bottom" aria-hidden="true" />
+          <header className="invitation-header">
             <p className="bismillah" lang="ar" dir="rtl" data-testid="text-bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
-            <p className="bismillah-roman" lang="en">Bismillahirrahmanirrahim</p>
-            <h1 className="couple-names" id="couple-title" data-testid="text-couple-names">
-              <span>Asim Abdul Ghafoor</span>
-              <span className="ampersand">&amp;</span>
-              <span>Sana Abdul Khalik</span>
+            <p className="bismillah-roman">Bismillahirrahmanirrahim</p>
+            <div className="foil-rule" aria-hidden="true"><span /></div>
+            <p className="eyebrow">Together with their families</p>
+            <h1 className="couple-names" id="couple-title" tabIndex={-1} data-testid="text-couple-names">
+              <span>Asim Abdul Ghafoor</span><span className="ampersand">&amp;</span><span>Sana Abdul Khaliq</span>
             </h1>
-            <p className="invitation-kicker">With the blessings of our families</p>
-            <div className="hero-rule" aria-hidden="true"><Sparkles size={15} /></div>
-            <p className="hero-description">
-              Together with their families, Asim and Sana joyfully invite you to share in the celebration of their marriage.
-            </p>
-            <p className="hero-date">Baraat · 20 November 2026 &nbsp; / &nbsp; Walima · 21 November 2026</p>
-          </div>
-        </section>
-
-        <section className="reflection-section" aria-labelledby="reflection-title" data-testid="section-reflection">
-          <div className="section-wrap">
-            <p className="section-label">A reflection on marriage</p>
-            <h2 className="reflection-title display-serif" id="reflection-title">A sign of His mercy</h2>
-            <span className="verse-mark" aria-hidden="true">“</span>
-            <blockquote className="verse-copy" data-testid="text-quran-translation">
-              And of His signs is that He created for you from yourselves mates that you may find tranquility in them; and He placed between you affection and mercy. Indeed in that are signs for a people who give thought.
+            <p className="invitation-copy">With grateful hearts, our families warmly invite you to join us in celebrating the marriage of Asim and Sana. Your presence, prayers, and good wishes will make these days all the more meaningful.</p>
+            <blockquote className="verse-quote" data-testid="text-quran-translation">
+              “And of His signs is that He created for you from yourselves mates that you may find tranquility in them; and He placed between you affection and mercy. Indeed in that are signs for a people who give thought.”
+              <cite data-testid="text-quran-reference">Qur’an · Surah Ar-Rum · 30:21</cite>
             </blockquote>
-            <p className="verse-reference" data-testid="text-quran-reference">The Holy Qur’an · Surah Ar-Rum · 30:21</p>
-          </div>
-        </section>
+          </header>
 
-        <section className="event-section" aria-labelledby="events-title" data-testid="section-events">
-          <div className="section-wrap">
-            <header className="event-heading">
-              <p className="section-label">Please join us</p>
-              <h2 id="events-title">Two celebrations</h2>
-            </header>
-            <div className="scratch-card" data-testid="panel-event-dates">
-              <div className="scratch-info">
-                <article className="event-item" data-testid="event-baraat">
-                  <h3>Baraat</h3>
-                  <p>Friday, 20 November 2026</p>
-                  <span className="event-date">Ahmad Marriage Hall</span>
-                </article>
-                <div className="scratch-divider" aria-hidden="true" />
-                <article className="event-item" data-testid="event-walima">
-                  <h3>Walima</h3>
-                  <p>Saturday, 21 November 2026</p>
-                  <span className="event-date">Bhatti Marriage Hall</span>
-                </article>
-              </div>
-              {!datesRevealed && (
-                <ScratchReveal onReveal={() => setDatesRevealed(true)} revealed={datesRevealed} />
-              )}
-            </div>
-            <div className="scratch-access">
-              {datesRevealed ? (
-                <span className="text-button" role="status" data-testid="status-dates-revealed"><Check size={14} /> Dates revealed</span>
-              ) : (
-                <button
-                  className="text-button"
-                  type="button"
-                  onClick={() => setDatesRevealed(true)}
-                  data-testid="button-reveal-dates"
-                >
-                  <CalendarDays size={14} /> Reveal dates without scratching
+          <section className={`dates-reveal${datesRevealed ? ' is-revealed' : ''}`} aria-labelledby="dates-title" data-testid="section-date-reveal">
+            {!datesRevealed ? (
+              <>
+                <div className="scratch-card" data-testid="panel-event-dates">
+                  <div className="scratch-info">
+                    <div className="date-display"><span>Baraat</span><strong>20</strong><small>November 2026 · Friday</small></div>
+                    <div className="scratch-divider" aria-hidden="true" />
+                    <div className="date-display"><span>Walima</span><strong>21</strong><small>November 2026 · Saturday</small></div>
+                  </div>
+                  <ScratchReveal onReveal={() => setDatesRevealed(true)} revealed={datesRevealed} />
+                </div>
+                <button className="gold-button reveal-button" type="button" onClick={() => setDatesRevealed(true)} data-testid="button-reveal-dates">
+                  <Sparkles size={15} /> Reveal the wedding dates
                 </button>
-              )}
-            </div>
-          </div>
-        </section>
+                <p className="reveal-hint">Scratch the gold panel, or use the button to unveil the celebrations.</p>
+              </>
+            ) : (
+              <div className="revealed-dates" role="status" data-testid="status-dates-revealed">
+                <p className="eyebrow">The days we will remember</p>
+                <h2 id="dates-title">Save the dates</h2>
+                <div className="revealed-grid">
+                  <div className="revealed-date"><span>Baraat · Friday</span><strong>20</strong><small>November 2026</small></div>
+                  <div className="revealed-date"><span>Walima · Saturday</span><strong>21</strong><small>November 2026</small></div>
+                </div>
+              </div>
+            )}
+          </section>
 
-        <section className="countdown-section" aria-label="Countdown to Baraat day" data-testid="section-countdown">
-          <div className="countdown-inner">
-            <div className="countdown-clock" aria-label="Time remaining to Baraat day">
+          <section className="countdown-section" aria-label="Countdown to Baraat" data-testid="section-countdown">
+            <p className="eyebrow">Counting down to the Baraat</p>
+            <div className="countdown-clock" aria-label="Time remaining until 20 November 2026 at 6 PM Pakistan time">
               {[
                 ['Days', countdown.days],
                 ['Hours', countdown.hours],
@@ -324,121 +346,103 @@ function App() {
                 ['Seconds', countdown.seconds],
               ].map(([label, value]) => (
                 <div className="countdown-unit" key={label} data-testid={`countdown-${String(label).toLowerCase()}`}>
-                  <span className="countdown-number">{String(value).padStart(2, '0')}</span>
-                  <span className="countdown-label">{label}</span>
+                  <strong>{String(value).padStart(2, '0')}</strong><span>{label}</span>
                 </div>
               ))}
             </div>
-            <div className="countdown-copy">
-              <p className="section-label">Until Baraat</p>
-              <h2>{countdown.days === 0 && countdown.hours === 0 && countdown.minutes === 0 && countdown.seconds === 0 ? 'The day is here' : 'Baraat day is approaching'}</h2>
-              <p>Counting down to midnight at the start of 20 November in Pakistan time. No event start time has been set.</p>
-            </div>
-          </div>
-        </section>
+            <p className="timezone-note" data-testid="text-countdown-timezone">Friday, 20 November 2026 · 6:00 PM · Pakistan Standard Time (UTC+05:00)</p>
+          </section>
 
-        <section className="venue-section" aria-labelledby="venue-title" data-testid="section-venues">
-          <div className="section-wrap">
-            <header className="venue-heading">
-              <p className="section-label">Gather with us</p>
-              <h2 id="venue-title">Where to celebrate</h2>
-            </header>
-            <div className="venue-grid">
-              <article className="venue-card" data-testid="card-venue-baraat">
-                <div>
-                  <div className="venue-card-top">
-                    <span className="venue-index">01 / Baraat</span>
-                    <span className="venue-icon" aria-hidden="true"><MapPin size={17} /></span>
-                  </div>
-                  <h3>Ahmad Marriage Hall</h3>
-                  <p>Friday, 20 November 2026</p>
+          <section className="events-section" id="events" aria-labelledby="events-title" data-testid="section-events">
+            <div className="section-heading">
+              <p className="eyebrow">Wedding celebrations</p>
+              <h2 id="events-title">Event Schedule</h2>
+              <p className="on-time-note"><Clock3 size={14} /> Kindly make sure to be on time to share every moment with us.</p>
+            </div>
+            <div className="event-grid">
+              <article className="event-card" data-testid="event-baraat">
+                <div className="event-card-head"><span>Day 01</span><span>Friday</span></div>
+                <h3>Baraat</h3>
+                <p className="event-card-date">20 November 2026</p>
+                <div className="event-times">
+                  <p><span>Function timing</span><strong>6:00–9:30 PM</strong></p>
+                  <p><span>Arrival</span><strong>6:00 PM</strong></p>
+                  <p><span>Dinner and Rukhsati</span><strong>8:00 PM</strong></p>
                 </div>
-                <a
-                  className="venue-link"
-                  href={baraatMap}
-                  target="_blank"
-                  rel="noreferrer"
-                  data-testid="link-map-baraat"
-                >
-                  Open directions <ArrowUpRight size={15} />
-                </a>
               </article>
-              <article className="venue-card" data-testid="card-venue-walima">
-                <div>
-                  <div className="venue-card-top">
-                    <span className="venue-index">02 / Walima</span>
-                    <span className="venue-icon" aria-hidden="true"><MapPin size={17} /></span>
-                  </div>
-                  <h3>Bhatti Marriage Hall</h3>
-                  <p>Saturday, 21 November 2026</p>
+              <article className="event-card" data-testid="event-walima">
+                <div className="event-card-head"><span>Day 02</span><span>Saturday</span></div>
+                <h3>Walima</h3>
+                <p className="event-card-date">21 November 2026</p>
+                <div className="event-times">
+                  <p><span>Function timing</span><strong>6:00–9:30 PM</strong></p>
+                  <p><span>Guest welcome</span><strong>6:00 PM</strong></p>
+                  <p><span>Dinner</span><strong>8:00 PM</strong></p>
                 </div>
-                <a
-                  className="venue-link"
-                  href={walimaMap}
-                  target="_blank"
-                  rel="noreferrer"
-                  data-testid="link-map-walima"
-                >
-                  Open directions <ArrowUpRight size={15} />
-                </a>
               </article>
             </div>
-          </div>
-        </section>
+          </section>
 
-        <section className="gallery-section" aria-label="Wedding photographs" data-testid="section-gallery">
-          <div className="section-wrap">
+          <section className="venues-section" id="venues" aria-labelledby="venues-title" data-testid="section-venues">
+            <div className="venue-intro">
+              <p className="eyebrow">Venues &amp; directions</p>
+              <h2 id="venues-title">Event Locations</h2>
+              <p>Choose a venue to open directions in Google Maps.</p>
+              <button className="outline-button calendar-button" type="button" onClick={makeCalendarFile} data-testid="button-add-to-calendar">
+                <CalendarDays size={16} /> Add both events to calendar
+              </button>
+            </div>
+            <div className="venue-list">
+              <article className="venue-row" data-testid="card-venue-baraat">
+                <div className="venue-mark"><MapPin size={17} /></div>
+                <div><span>Baraat · Friday, 20 November</span><h3>Ahmad Marriage Hall</h3></div>
+                <a className="map-button" href={baraatMap} target="_blank" rel="noreferrer" data-testid="link-map-baraat">Directions <ArrowUpRight size={15} /></a>
+              </article>
+              <article className="venue-row" data-testid="card-venue-walima">
+                <div className="venue-mark"><MapPin size={17} /></div>
+                <div><span>Walima · Saturday, 21 November</span><h3>Bhatti Marriage Hall</h3></div>
+                <a className="map-button" href={walimaMap} target="_blank" rel="noreferrer" data-testid="link-map-walima">Directions <ArrowUpRight size={15} /></a>
+              </article>
+            </div>
+            <aside className="dress-code" data-testid="text-dress-code">
+              <p className="eyebrow">Dress code</p>
+              <p>Formal Traditional or Evening Wear</p>
+              <span>We warmly look forward to celebrating together in festive formal attire.</span>
+            </aside>
+          </section>
+
+          <section className="gallery-section" aria-label="Wedding photographs" data-testid="section-gallery">
             <div className="gallery-placeholder" data-testid="empty-gallery">
-              <div className="gallery-copy">
-                <Sparkles className="gallery-spark" size={17} aria-hidden="true" />
-                <h2>Memories, soon</h2>
-                <p>A little space for photographs from our celebrations. We look forward to sharing them with you.</p>
-              </div>
+              <div className="gallery-frame" aria-hidden="true" />
+              <p className="eyebrow">A place for memories</p>
+              <h2>Our photographs, soon</h2>
+              <p>We look forward to sharing moments from our celebrations with you.</p>
             </div>
-          </div>
-        </section>
+          </section>
 
-        <section className="rsvp-section" aria-labelledby="rsvp-title" data-testid="section-rsvp">
-          <p className="section-label">Your presence is a gift</p>
-          <h2 id="rsvp-title">Will you join us?</h2>
-          <p>Kindly let our families know if we may count you among our guests.</p>
-          <a className="rsvp-button" href={rsvpUrl} target="_blank" rel="noreferrer" data-testid="link-rsvp">
-            Respond to invitation <ArrowUpRight size={15} />
-          </a>
-        </section>
+          <section className="rsvp-section" aria-labelledby="rsvp-title" data-testid="section-rsvp">
+            <p className="eyebrow">Your presence is a gift</p>
+            <h2 id="rsvp-title">Will you join us?</h2>
+            <p>Kindly let our families know if we may count you among our guests.</p>
+            <a className="gold-button rsvp-button" href={rsvpUrl} target="_blank" rel="noreferrer" data-testid="link-rsvp">Respond to invitation <ArrowUpRight size={15} /></a>
+          </section>
 
-        <footer className="footer-section" data-testid="section-contacts">
-          <div className="footer-inner">
-            <div className="contact-layout">
-              <div className="contact-title">
-                <p className="section-label">Questions or wishes</p>
-                <h2>Reach our families</h2>
-                <p>We would be happy to hear from you.</p>
-              </div>
-              <div className="contact-list" aria-label="Family contact numbers">
-                {contacts.map((number, index) => (
-                  <a
-                    className="contact-link"
-                    href={`tel:${number.replaceAll('-', '')}`}
-                    key={number}
-                    data-testid={`link-contact-${index + 1}`}
-                  >
-                    <Phone size={14} /> {number}
-                  </a>
-                ))}
-              </div>
+          <footer className="contact-section" data-testid="section-contacts">
+            <div className="contact-copy"><p className="eyebrow">Questions or wishes</p><h2>Reach our families</h2><p>We would be happy to hear from you.</p></div>
+            <div className="contact-list" aria-label="Family contact numbers">
+              {contacts.map((number, index) => (
+                <a className="contact-link" href={`tel:${number.replaceAll('-', '')}`} key={number} data-testid={`link-contact-${index + 1}`}>
+                  <Phone size={14} />{number}
+                </a>
+              ))}
             </div>
-            <div className="footer-bottom">
-              <p>With love, Asim &amp; Sana</p>
-              <p>20 — 21 November 2026</p>
-            </div>
-          </div>
-        </footer>
+            <div className="footer-bottom"><span>With love, Asim &amp; Sana</span><span>20 — 21 November 2026</span></div>
+          </footer>
+        </article>
       </div>
-      <a href="#couple-title" className="sr-only" data-testid="link-back-to-invitation">Return to invitation</a>
-      <span className="sr-only" data-testid="text-countdown-timezone">Countdown calculated to midnight Pakistan Standard Time (UTC+05:00).</span>
-      <a href="#couple-title" className="skip-link" data-testid="link-skip-to-invitation"><ArrowDown size={14} /> Invitation details</a>
       <StarPointer />
+      <a href="#couple-title" className="skip-link" data-testid="link-skip-to-invitation"><ArrowDown size={14} /> Invitation details</a>
+      <span className="sr-only">Countdown calculated to 6:00 PM Pakistan Standard Time (UTC+05:00).</span>
     </main>
   );
 }

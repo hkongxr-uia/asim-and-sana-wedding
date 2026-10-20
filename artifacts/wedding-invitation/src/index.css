@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:wght@400;500;600;700;1,400;1,600&family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&display=swap');
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @plugin "@tailwindcss/typography";
@@ -1114,4 +1114,277 @@ button:focus-visible, a:focus-visible {
     animation-iteration-count: 1 !important;
     transition-duration: .01ms !important;
   }
+}
+
+/* Royal emerald and gilt invitation system */
+:root {
+  color-scheme: dark;
+  --forest: #06261c;
+  --forest-deep: #021811;
+  --forest-soft: #114434;
+  --gold: #d2a42f;
+  --gold-light: #e2be56;
+  --paper: #06261c;
+  --paper-light: #f7ebbe;
+  --ink: #f1e8d2;
+  --muted-ink: #b7b8a6;
+  --background: 159 85% 8%;
+  --foreground: 43 40% 90%;
+  --border: 43 55% 38%;
+  --card: 159 65% 13%;
+  --card-foreground: 43 40% 90%;
+  --card-border: 43 55% 38%;
+  --app-font-sans: 'Montserrat', sans-serif;
+  --app-font-serif: 'Cormorant Garamond', serif;
+}
+
+html { background: #021811; scroll-padding-top: 6rem; }
+body {
+  background: #021811;
+  color: #f1e8d2;
+  font-family: 'Montserrat', sans-serif;
+}
+.invitation-page {
+  min-height: 100dvh;
+  overflow: clip;
+  background:
+    radial-gradient(ellipse at 50% 4%, rgba(32, 89, 63, .25), transparent 42rem),
+    radial-gradient(ellipse at 0% 70%, rgba(20, 71, 52, .16), transparent 35rem),
+    #021811;
+  color: #f1e8d2;
+}
+.page-shell { width: min(100%, 1120px); padding: 1.15rem 1.25rem 3rem; }
+.site-nav {
+  position: sticky;
+  z-index: 30;
+  top: .8rem;
+  display: flex;
+  width: min(100%, 940px);
+  min-height: 3.65rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0 auto 1.5rem;
+  padding: .45rem .65rem .45rem 1rem;
+  border: 1px solid rgba(226, 190, 86, .35);
+  border-radius: 999px;
+  background: rgba(2, 24, 17, .92);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, .25);
+  backdrop-filter: blur(14px);
+}
+.site-nav > a:not(.nav-rsvp), .nav-cover {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  border: 0;
+  background: none;
+  color: #f1d98e;
+  font: 500 .65rem 'Cinzel', serif;
+  letter-spacing: .12em;
+  text-decoration: none;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.site-nav > a:not(.nav-rsvp):hover, .nav-cover:hover { color: #fff3ce; }
+.nav-rsvp {
+  display: inline-flex;
+  min-height: 2.35rem;
+  align-items: center;
+  padding: 0 1.1rem;
+  border-radius: 999px;
+  background: linear-gradient(120deg, #d2a42f, #f0d276 52%, #b0831f);
+  color: #182116;
+  font: 700 .63rem 'Cinzel', serif;
+  letter-spacing: .13em;
+  text-decoration: none;
+}
+.invitation-card {
+  position: relative;
+  isolation: isolate;
+  width: min(100%, 970px);
+  margin: 0 auto;
+  padding: clamp(2rem, 6vw, 4.7rem);
+  overflow: hidden;
+  border: 1px solid rgba(210, 164, 47, .62);
+  border-radius: 1.35rem;
+  background:
+    linear-gradient(145deg, rgba(17, 68, 52, .96), rgba(6, 38, 28, .98) 54%, rgba(4, 31, 23, .98));
+  box-shadow: 0 28px 85px rgba(0, 0, 0, .48), inset 0 0 0 7px rgba(226, 190, 86, .035), inset 0 0 0 8px rgba(210, 164, 47, .16);
+}
+.invitation-card::before, .invitation-card::after {
+  position: absolute;
+  z-index: -1;
+  width: 22rem;
+  height: 22rem;
+  border: 1px solid rgba(226, 190, 86, .095);
+  border-radius: 50%;
+  content: '';
+  pointer-events: none;
+}
+.invitation-card::before { top: -15rem; right: -10rem; box-shadow: 0 0 0 1rem rgba(226,190,86,.018), 0 0 0 2rem rgba(226,190,86,.018); }
+.invitation-card::after { bottom: -16rem; left: -11rem; box-shadow: 0 0 0 1rem rgba(226,190,86,.018), 0 0 0 2rem rgba(226,190,86,.018); }
+.medallion { position: absolute; z-index: -1; width: 10rem; height: 10rem; border: 1px solid rgba(226,190,86,.1); border-radius: 50%; pointer-events: none; }
+.medallion::before, .medallion::after { position: absolute; inset: .8rem; border: 1px solid rgba(226,190,86,.09); border-radius: 50%; content: ''; }
+.medallion::after { inset: 1.55rem; transform: rotate(45deg); border-radius: 35%; }
+.medallion-top { top: 14rem; left: -7rem; }
+.medallion-bottom { right: -6rem; bottom: 18rem; }
+.invitation-header, .dates-reveal, .countdown-section, .events-section, .venues-section, .gallery-section, .rsvp-section, .contact-section { position: relative; }
+.invitation-header { text-align: center; }
+.bismillah { margin: 0; color: #eed68a; font: 2rem 'Amiri', serif; }
+.bismillah-roman { margin: .1rem 0 1.3rem; color: #e2be56; font: 500 .68rem 'Cinzel', serif; letter-spacing: .17em; }
+.foil-rule { display: flex; width: min(100%, 18rem); align-items: center; gap: .8rem; margin: 0 auto 1.8rem; color: var(--gold); }
+.foil-rule::before, .foil-rule::after { height: 1px; flex: 1; background: linear-gradient(90deg, transparent, rgba(226,190,86,.7)); content: ''; }
+.foil-rule::after { transform: rotate(180deg); }
+.foil-rule span { width: .45rem; height: .45rem; transform: rotate(45deg); border: 1px solid #e2be56; }
+.eyebrow { margin: 0 0 .7rem; color: #e2be56; font: 600 .62rem 'Cinzel', serif; letter-spacing: .22em; text-transform: uppercase; }
+.couple-names {
+  margin: .7rem auto 1.2rem;
+  background: linear-gradient(135deg, #fff2d1 0%, #f6dd98 22%, #d2a42f 48%, #fff8e3 72%, #a87913 100%);
+  background-clip: text;
+  color: transparent;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 3px 10px rgba(0, 0, 0, .18));
+  font: italic 700 clamp(2.4rem, 7vw, 5rem)/1.14 'Playfair Display', serif;
+  letter-spacing: .005em;
+  outline-offset: .35rem;
+}
+.couple-names span { display: block; }
+.couple-names .ampersand { margin: .1em 0; color: #f2dfac; font: italic 500 .52em 'Cormorant Garamond', serif; -webkit-text-fill-color: #e2be56; }
+.invitation-copy { max-width: 41rem; margin: 1.7rem auto 1.2rem; color: #f0e8d7; font: 400 clamp(.88rem, 2vw, 1rem)/1.85 'Montserrat', sans-serif; }
+.verse-quote {
+  max-width: 39rem;
+  margin: 1.7rem auto 0;
+  padding: 1.1rem 1.3rem;
+  border: 1px solid rgba(210,164,47,.22);
+  border-left: 2px solid #d2a42f;
+  border-radius: 0 .7rem .7rem 0;
+  background: rgba(2,24,17,.58);
+  color: #f4e8c6;
+  font: italic 500 clamp(1.08rem, 2.6vw, 1.4rem)/1.65 'Cormorant Garamond', serif;
+}
+.verse-quote cite { display: block; margin-top: .55rem; color: #e2be56; font: 600 .58rem 'Montserrat', sans-serif; letter-spacing: .14em; text-transform: uppercase; }
+.dates-reveal { margin: 3.2rem 0 2.6rem; text-align: center; }
+.scratch-card { max-width: 740px; min-height: 220px; border-color: rgba(226,190,86,.5); border-radius: 1rem; background: #06261c; box-shadow: 0 17px 45px rgba(0,0,0,.24); }
+.scratch-info { min-height: inherit; padding: 1.4rem; }
+.date-display { display: flex; flex-direction: column; align-items: center; gap: .25rem; text-align: center; }
+.date-display span, .revealed-date span { color: #e2be56; font: 600 .67rem 'Cinzel', serif; letter-spacing: .17em; text-transform: uppercase; }
+.date-display strong { background: linear-gradient(135deg,#fff2d1,#d2a42f 50%,#fff8e3); background-clip: text; color: transparent; -webkit-background-clip: text; font: 600 clamp(3.2rem, 8vw, 5.3rem)/1 'Cormorant Garamond', serif; }
+.date-display small, .revealed-date small { color: #ede6d3; font: 500 .67rem 'Montserrat', sans-serif; letter-spacing: .09em; text-transform: uppercase; }
+.scratch-divider { height: 5rem; background: rgba(226,190,86,.38); }
+.scratch-canvas { border-radius: .95rem; touch-action: none; }
+.gold-button {
+  display: inline-flex;
+  min-height: 3rem;
+  align-items: center;
+  justify-content: center;
+  gap: .65rem;
+  padding: 0 1.45rem;
+  border: 1px solid rgba(255,245,210,.62);
+  border-radius: 999px;
+  background: linear-gradient(120deg, #d2a42f, #f0d276 52%, #b0831f);
+  box-shadow: 0 9px 24px rgba(0,0,0,.26), inset 0 1px rgba(255,255,255,.42);
+  color: #172117;
+  font: 700 .67rem 'Cinzel', serif;
+  letter-spacing: .13em;
+  text-decoration: none;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform .25s ease, filter .25s ease;
+}
+.gold-button:hover { transform: translateY(-2px); filter: brightness(1.08); }
+.reveal-button { margin-top: 1rem; }
+.reveal-hint { margin: .75rem 0 0; color: #c7c4b4; font-size: .67rem; }
+.revealed-dates { animation: date-arrive .65s ease both; }
+.revealed-dates h2 { margin: .2rem 0 1.4rem; color: #f4e8c6; font: 500 clamp(1.8rem,4vw,2.5rem) 'Playfair Display', serif; }
+.revealed-grid { display: grid; max-width: 680px; grid-template-columns: repeat(2,1fr); gap: 1rem; margin: 0 auto; }
+.revealed-date { display: flex; min-height: 180px; flex-direction: column; align-items: center; justify-content: center; gap: .4rem; border: 1px solid rgba(226,190,86,.42); border-radius: 1rem; background: linear-gradient(180deg,rgba(17,68,52,.8),rgba(2,24,17,.82)); box-shadow: inset 0 0 0 5px rgba(226,190,86,.035); }
+.revealed-date strong { background: linear-gradient(135deg,#fff2d1,#d2a42f 50%,#fff8e3); background-clip: text; color: transparent; -webkit-background-clip: text; font: 700 clamp(4rem,8vw,5.6rem)/.95 'Cormorant Garamond',serif; }
+.countdown-section { margin: 2.6rem auto 3.4rem; padding: 1.7rem; border: 1px solid rgba(226,190,86,.23); border-radius: 1rem; background: rgba(2,24,17,.7); text-align: center; }
+.countdown-clock { display: grid; max-width: 530px; grid-template-columns: repeat(4,minmax(0,1fr)); gap: .7rem; margin: 1rem auto; }
+.countdown-unit { display: flex; min-width: 0; flex-direction: column; gap: .3rem; padding: .75rem .4rem; border: 1px solid rgba(210,164,47,.22); border-radius: .65rem; background: rgba(17,68,52,.58); }
+.countdown-unit strong { background: linear-gradient(135deg,#fff2d1,#d2a42f 55%,#fff8e3); background-clip: text; color: transparent; -webkit-background-clip: text; font: 600 clamp(1.65rem,5vw,2.6rem)/1 'Cinzel',serif; font-variant-numeric: tabular-nums; }
+.countdown-unit span { color: #c8c7b8; font-size: .56rem; letter-spacing: .16em; text-transform: uppercase; }
+.timezone-note { margin: .9rem 0 0; color: #d0c9b8; font: 500 .65rem 'Montserrat',sans-serif; letter-spacing: .04em; }
+.events-section { margin: 3.5rem 0; scroll-margin-top: 6rem; }
+.section-heading { margin-bottom: 1.6rem; text-align: center; }
+.section-heading h2, .venue-intro h2, .contact-copy h2 { margin: 0; color: #f4e8c6; font: 500 clamp(2rem,4.5vw,3.2rem)/1.15 'Playfair Display',serif; }
+.on-time-note { display: inline-flex; align-items: center; justify-content: center; gap: .55rem; margin: 1rem auto 0; padding: .65rem 1rem; border: 1px solid rgba(226,190,86,.35); border-radius: 999px; background: rgba(2,24,17,.78); color: #f0d98e; font: 500 .67rem 'Cinzel',serif; letter-spacing: .035em; }
+.event-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 1rem; }
+.event-card { display: flex; flex-direction: column; padding: clamp(1.2rem,3vw,1.8rem); border: 1px solid rgba(226,190,86,.32); border-radius: .85rem; background: linear-gradient(160deg,rgba(17,68,52,.91),rgba(6,38,28,.95)); transition: border-color .25s ease, transform .25s ease; }
+.event-card:hover { transform: translateY(-3px); border-color: rgba(226,190,86,.7); }
+.event-card-head { display: flex; justify-content: space-between; align-items: center; color: #e2be56; font: 600 .61rem 'Cinzel',serif; letter-spacing: .14em; text-transform: uppercase; }
+.event-card-head span:first-child { padding: .35rem .65rem; border: 1px solid rgba(226,190,86,.32); border-radius: 999px; background: rgba(2,24,17,.55); }
+.event-card h3 { margin: 1.15rem 0 .15rem; color: #f4e8c6; font: 500 2rem 'Cormorant Garamond',serif; }
+.event-card-date { margin: 0 0 1.2rem; color: #d3cdbd; font: 500 .68rem 'Montserrat',sans-serif; letter-spacing: .06em; }
+.event-times { display: grid; gap: .65rem; margin-top: auto; padding-top: 1rem; border-top: 1px solid rgba(226,190,86,.2); }
+.event-times p { display: flex; justify-content: space-between; gap: .7rem; margin: 0; color: #e4dfd0; font-size: .68rem; line-height: 1.5; }
+.event-times strong { color: #f0d98e; font-weight: 600; text-align: right; }
+.venues-section { display: grid; grid-template-columns: .78fr 1.22fr; gap: 1.5rem; margin: 3.8rem 0; padding: clamp(1.25rem,4vw,2rem); border: 1px solid rgba(226,190,86,.3); border-radius: 1rem; background: rgba(2,24,17,.62); scroll-margin-top: 6rem; }
+.venue-intro > p:not(.eyebrow) { color: #cbcabb; font-size: .76rem; line-height: 1.7; }
+.outline-button, .map-button { display: inline-flex; min-height: 2.65rem; align-items: center; justify-content: center; gap: .55rem; padding: 0 .9rem; border: 1px solid rgba(210,164,47,.5); border-radius: .55rem; background: rgba(17,68,52,.68); color: #f0d98e; font: 600 .62rem 'Cinzel',serif; letter-spacing: .06em; text-decoration: none; cursor: pointer; transition: border-color .2s ease, background .2s ease; }
+.outline-button:hover, .map-button:hover { border-color: #e2be56; background: #114434; }
+.calendar-button { margin-top: .55rem; }
+.venue-list { display: grid; gap: .75rem; }
+.venue-row { display: grid; grid-template-columns: 2.5rem minmax(0,1fr) auto; align-items: center; gap: .75rem; padding: .9rem; border: 1px solid rgba(226,190,86,.21); border-radius: .7rem; background: rgba(17,68,52,.62); }
+.venue-mark { display: grid; width: 2.35rem; height: 2.35rem; place-items: center; border: 1px solid rgba(226,190,86,.38); border-radius: 50%; color: #e2be56; }
+.venue-row div:nth-child(2) span { color: #d2b966; font: 500 .55rem 'Montserrat',sans-serif; letter-spacing: .05em; }
+.venue-row h3 { margin: .2rem 0 0; color: #f4e8c6; font: 500 1.25rem 'Cormorant Garamond',serif; }
+.map-button { min-height: 2.3rem; padding: 0 .65rem; }
+.dress-code { grid-column: 1 / -1; display: grid; grid-template-columns: auto 1fr; align-items: center; gap: .1rem 1.2rem; padding-top: 1.1rem; border-top: 1px solid rgba(226,190,86,.2); }
+.dress-code .eyebrow { margin: 0; }
+.dress-code p:not(.eyebrow) { margin: 0; color: #f0d98e; font: 500 1rem 'Cormorant Garamond',serif; }
+.dress-code span { grid-column: 2; color: #bdbcae; font-size: .65rem; }
+.gallery-section { margin: 3rem 0; }
+.gallery-placeholder { position: relative; display: flex; min-height: 220px; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; border: 1px dashed rgba(226,190,86,.38); border-radius: .9rem; background: radial-gradient(ellipse at center,rgba(17,68,52,.56),rgba(2,24,17,.42)); text-align: center; }
+.gallery-frame { position: absolute; width: 11rem; height: 11rem; border: 1px solid rgba(226,190,86,.12); border-radius: 50%; box-shadow: 0 0 0 1rem rgba(226,190,86,.025),0 0 0 2rem rgba(226,190,86,.02); }
+.gallery-placeholder .eyebrow, .gallery-placeholder h2, .gallery-placeholder > p:last-child { position: relative; z-index: 1; }
+.gallery-placeholder h2 { margin: 0 0 .4rem; color: #f4e8c6; font: 500 1.8rem 'Playfair Display',serif; }
+.gallery-placeholder > p:last-child { max-width: 26rem; margin: 0; color: #c6c4b7; font-size: .72rem; line-height: 1.7; }
+.rsvp-section { margin: 3rem 0 0; padding: 2.2rem 1rem 2.6rem; border-top: 1px solid rgba(226,190,86,.25); border-bottom: 1px solid rgba(226,190,86,.25); text-align: center; }
+.rsvp-section h2 { margin: 0 0 .55rem; color: #f2d77f; font: 500 clamp(2rem,4vw,3rem) 'Playfair Display',serif; }
+.rsvp-section > p:not(.eyebrow) { max-width: 30rem; margin: auto; color: #ddd5c2; font: 400 1.1rem/1.6 'Cormorant Garamond',serif; }
+.rsvp-button { margin-top: 1.25rem; }
+.contact-section { display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; padding: 2.2rem .3rem .2rem; }
+.contact-copy h2 { font-size: 1.85rem; }
+.contact-copy > p:last-child { margin: .4rem 0 0; color: #bdbcae; font-size: .7rem; }
+.contact-list { display: flex; flex-direction: column; align-items: flex-start; gap: .6rem; }
+.contact-link { display: inline-flex; align-items: center; gap: .55rem; color: #edcf77; font-size: .76rem; font-variant-numeric: tabular-nums; text-decoration: none; }
+.contact-link:hover { color: #fff0bb; }
+.footer-bottom { grid-column: 1/-1; display: flex; justify-content: space-between; gap: 1rem; margin-top: .6rem; padding-top: 1rem; border-top: 1px solid rgba(226,190,86,.2); color: #b8b4a4; font: 500 .57rem 'Cinzel',serif; letter-spacing: .12em; text-transform: uppercase; }
+.skip-link { background: #e2be56; color: #021811; }
+.intro-screen { color: #f7ebbe; }
+@keyframes date-arrive { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+@media (max-width: 700px) {
+  .page-shell { padding: .6rem .7rem 1.5rem; }
+  .site-nav { top: .35rem; gap: .55rem; min-height: 3.2rem; margin-bottom: .8rem; padding-left: .7rem; }
+  .site-nav > a:not(.nav-rsvp), .nav-cover { font-size: .54rem; letter-spacing: .07em; }
+  .nav-rsvp { min-height: 2rem; padding-inline: .75rem; font-size: .55rem; }
+  .invitation-card { padding: 2rem 1rem; border-radius: 1rem; }
+  .bismillah { font-size: 1.7rem; }
+  .invitation-copy { padding-inline: .2rem; }
+  .scratch-card { min-height: 310px; }
+  .scratch-info { grid-template-columns: 1fr; gap: .7rem; padding: 1rem; }
+  .scratch-divider { width: 4rem; height: 1px; margin: 0 auto; }
+  .date-display strong { font-size: 3rem; }
+  .event-grid, .revealed-grid { grid-template-columns: 1fr; }
+  .revealed-date { min-height: 140px; }
+  .venues-section { grid-template-columns: 1fr; gap: 1.2rem; }
+  .venue-row { grid-template-columns: 2.35rem minmax(0,1fr); }
+  .venue-row .map-button { grid-column: 2; justify-self: start; }
+  .dress-code { grid-template-columns: 1fr; gap: .35rem; }
+  .dress-code span { grid-column: 1; }
+  .contact-section { grid-template-columns: 1fr; }
+  .contact-list { flex-direction: row; flex-wrap: wrap; gap: .65rem 1.2rem; }
+  .footer-bottom { grid-column: 1; flex-direction: column; }
+}
+@media (max-width: 390px) {
+  .site-nav { justify-content: center; gap: .45rem; }
+  .site-nav > a:not(.nav-rsvp), .nav-cover { font-size: .49rem; }
+  .nav-cover { gap: .15rem; }
+  .nav-rsvp { padding-inline: .55rem; }
+  .countdown-clock { gap: .35rem; }
+  .countdown-unit { padding: .65rem .2rem; }
+  .on-time-note { border-radius: .7rem; font-size: .59rem; }
 }
