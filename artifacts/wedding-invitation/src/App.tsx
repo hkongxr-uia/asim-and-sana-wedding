@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ArrowDown, ArrowLeft, ArrowUpRight, CalendarDays, Clock3, MapPin, Phone, Play, Sparkles, Star } from 'lucide-react';
 import introVideoWebm from '@assets/0_intro_1792477792582.webm';
 import introVideoMp4 from '@assets/0_intro_1792477792582.mp4';
@@ -19,111 +19,6 @@ function timeUntilBaraat() {
     minutes: Math.floor((remaining % 3_600_000) / 60_000),
     seconds: Math.floor((remaining % 60_000) / 1_000),
   };
-}
-
-function ScratchReveal({ onReveal, revealed }: { onReveal: () => void; revealed: boolean }) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const strokeCount = useRef(0);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas || revealed) return;
-    const context = canvas.getContext('2d');
-    if (!context) return;
-    const rect = canvas.getBoundingClientRect();
-    const ratio = Math.max(1, window.devicePixelRatio || 1);
-    canvas.width = Math.round(rect.width * ratio);
-    canvas.height = Math.round(rect.height * ratio);
-    context.scale(ratio, ratio);
-    context.fillStyle = '#c5a35a';
-    context.fillRect(0, 0, rect.width, rect.height);
-
-    const gradient = context.createLinearGradient(0, 0, rect.width, rect.height);
-    gradient.addColorStop(0, 'rgba(238, 217, 158, .7)');
-    gradient.addColorStop(.48, 'rgba(181, 138, 59, .08)');
-    gradient.addColorStop(1, 'rgba(133, 94, 31, .28)');
-    context.fillStyle = gradient;
-    context.fillRect(0, 0, rect.width, rect.height);
-
-    context.strokeStyle = 'rgba(255, 248, 226, .22)';
-    context.lineWidth = 1;
-    for (let x = -rect.height; x < rect.width + rect.height; x += 15) {
-      context.beginPath();
-      context.moveTo(x, 0);
-      context.lineTo(x + rect.height, rect.height);
-      context.stroke();
-    }
-    context.fillStyle = 'rgba(255, 248, 226, .42)';
-    for (let x = 12; x < rect.width; x += 25) {
-      for (let y = 12; y < rect.height; y += 25) {
-        context.beginPath();
-        context.arc(x, y, 1, 0, Math.PI * 2);
-        context.fill();
-      }
-    }
-    context.fillStyle = '#3b2b08';
-    context.textAlign = 'center';
-    context.textBaseline = 'middle';
-    context.font = '600 11px Montserrat, sans-serif';
-    context.fillText('SCRATCH TO REVEAL', rect.width / 2, rect.height / 2 - 7);
-    context.font = '22px "Cormorant Garamond", serif';
-    context.fillText('Two days, one beautiful beginning', rect.width / 2, rect.height / 2 + 18);
-    context.font = '10px Montserrat, sans-serif';
-    context.fillText('USE A FINGER OR MOUSE', rect.width / 2, rect.height / 2 + 42);
-  }, [revealed]);
-
-  function eraseAt(event: ReactPointerEvent<HTMLCanvasElement>) {
-    const canvas = canvasRef.current;
-    const context = canvas?.getContext('2d');
-    if (!canvas || !context) return;
-    const rect = canvas.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-    context.globalCompositeOperation = 'destination-out';
-    context.lineWidth = 48;
-    context.lineCap = 'round';
-    context.lineJoin = 'round';
-    context.lineTo(x, y);
-    context.stroke();
-    context.beginPath();
-    context.moveTo(x, y);
-    strokeCount.current += 1;
-
-    if (strokeCount.current % 7 === 0 && canvas.width && canvas.height) {
-      const pixels = context.getImageData(0, 0, canvas.width, canvas.height).data;
-      let transparent = 0;
-      for (let i = 3; i < pixels.length; i += 4) {
-        if (pixels[i] < 100) transparent += 1;
-      }
-      if (transparent / (pixels.length / 4) > .34) onReveal();
-    }
-  }
-
-  return (
-    <canvas
-      ref={canvasRef}
-      className="scratch-canvas"
-      aria-hidden="true"
-      data-testid="scratch-surface"
-      onPointerDown={(event) => {
-        event.currentTarget.setPointerCapture(event.pointerId);
-        const rect = event.currentTarget.getBoundingClientRect();
-        const context = event.currentTarget.getContext('2d');
-        if (context) {
-          context.beginPath();
-          context.moveTo(event.clientX - rect.left, event.clientY - rect.top);
-        }
-        eraseAt(event);
-      }}
-      onPointerMove={(event) => {
-        if (event.buttons > 0 || event.pointerType === 'touch') eraseAt(event);
-      }}
-      onPointerUp={() => {
-        const context = canvasRef.current?.getContext('2d');
-        context?.beginPath();
-      }}
-    />
-  );
 }
 
 function StarPointer() {
@@ -310,27 +205,22 @@ function App() {
 
           <section className={`dates-reveal${datesRevealed ? ' is-revealed' : ''}`} aria-labelledby="dates-title" data-testid="section-date-reveal">
             {!datesRevealed ? (
-              <>
-                <div className="scratch-card" data-testid="panel-event-dates">
-                  <div className="scratch-info">
-                    <div className="date-display"><span>Baraat</span><strong>20</strong><small>November 2026 · Friday</small></div>
-                    <div className="scratch-divider" aria-hidden="true" />
-                    <div className="date-display"><span>Walima</span><strong>21</strong><small>November 2026 · Saturday</small></div>
-                  </div>
-                  <ScratchReveal onReveal={() => setDatesRevealed(true)} revealed={datesRevealed} />
-                </div>
-                <button className="gold-button reveal-button" type="button" onClick={() => setDatesRevealed(true)} data-testid="button-reveal-dates">
-                  <Sparkles size={15} /> Reveal the wedding dates
+              <div className="reveal-intro">
+                <button className="gold-button reveal-button" type="button" onClick={() => setDatesRevealed(true)} aria-controls="revealed-date-cards" data-testid="button-reveal-dates">
+                  <Sparkles size={14} /> Click to Reveal Wedding Dates
                 </button>
-                <p className="reveal-hint">Scratch the gold panel, or use the button to unveil the celebrations.</p>
-              </>
+                <p className="reveal-hint">Tap to unveil the celebrations.</p>
+              </div>
             ) : (
-              <div className="revealed-dates" role="status" data-testid="status-dates-revealed">
-                <p className="eyebrow">The days we will remember</p>
-                <h2 id="dates-title">Save the dates</h2>
+              <div className="revealed-dates" id="revealed-date-cards" aria-live="polite" data-testid="status-dates-revealed">
+                <p className="eyebrow">Save the auspicious dates</p>
                 <div className="revealed-grid">
-                  <div className="revealed-date"><span>Baraat · Friday</span><strong>20</strong><small>November 2026</small></div>
-                  <div className="revealed-date"><span>Walima · Saturday</span><strong>21</strong><small>November 2026</small></div>
+                  <article className="revealed-date" data-testid="date-card-baraat">
+                    <span>The Baraat</span><strong>20</strong><small>November 2026</small><p>Friday Evening · 06:00 PM</p>
+                  </article>
+                  <article className="revealed-date" data-testid="date-card-walima">
+                    <span>The Walima</span><strong>21</strong><small>November 2026</small><p>Saturday Evening · 06:00 PM</p>
+                  </article>
                 </div>
               </div>
             )}
@@ -362,22 +252,24 @@ function App() {
             <div className="event-grid">
               <article className="event-card" data-testid="event-baraat">
                 <div className="event-card-head"><span>Day 01</span><span>Friday</span></div>
-                <h3>Baraat</h3>
+                <h3>The Baraat</h3>
                 <p className="event-card-date">20 November 2026</p>
+                <p className="event-description">Join us for the vibrant Baraat procession, grand reception dinner, and emotional Rukhsati farewell.</p>
                 <div className="event-times">
-                  <p><span>Function timing</span><strong>6:00–9:30 PM</strong></p>
-                  <p><span>Arrival</span><strong>6:00 PM</strong></p>
-                  <p><span>Dinner and Rukhsati</span><strong>8:00 PM</strong></p>
+                  <p><span>Function Timing:</span><strong>06:00 PM to 09:30 PM</strong></p>
+                  <p><span>Baraat Arrival:</span><strong>06:00 PM</strong></p>
+                  <p><span>Dinner &amp; Rukhsati:</span><strong>08:00 PM</strong></p>
                 </div>
               </article>
               <article className="event-card" data-testid="event-walima">
                 <div className="event-card-head"><span>Day 02</span><span>Saturday</span></div>
-                <h3>Walima</h3>
+                <h3>The Walima</h3>
                 <p className="event-card-date">21 November 2026</p>
+                <p className="event-description">A joyful reception dinner hosted by the groom's family to share blessings, happiness, and delicious food with loved ones.</p>
                 <div className="event-times">
-                  <p><span>Function timing</span><strong>6:00–9:30 PM</strong></p>
-                  <p><span>Guest welcome</span><strong>6:00 PM</strong></p>
-                  <p><span>Dinner</span><strong>8:00 PM</strong></p>
+                  <p><span>Function Timing:</span><strong>06:00 PM to 09:30 PM</strong></p>
+                  <p><span>Guest Welcome:</span><strong>06:00 PM</strong></p>
+                  <p><span>Dinner:</span><strong>08:00 PM</strong></p>
                 </div>
               </article>
             </div>
