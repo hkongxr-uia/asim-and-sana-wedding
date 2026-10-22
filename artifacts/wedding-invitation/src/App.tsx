@@ -190,16 +190,14 @@ function App() {
           <div className="medallion medallion-bottom" aria-hidden="true" />
           <header className="invitation-header">
             <p className="bismillah" lang="ar" dir="rtl" data-testid="text-bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
-            <p className="bismillah-roman">Bismillahirrahmanirrahim</p>
             <div className="foil-rule" aria-hidden="true"><span /></div>
-            <p className="eyebrow">Together with their families</p>
             <h1 className="couple-names" id="couple-title" tabIndex={-1} data-testid="text-couple-names">
               <span>Asim Abdul Ghafoor</span><span className="ampersand">&amp;</span><span>Sana Abdul Khaliq</span>
             </h1>
-            <p className="invitation-copy">With grateful hearts, our families warmly invite you to join us in celebrating the marriage of Asim and Sana. Your presence, prayers, and good wishes will make these days all the more meaningful.</p>
+            <p className="invitation-copy">Together with their families, we warmly invite you to celebrate our Big moment. Your presence, love, and prayers mean the world to us as we begin this blessed new journey together.</p>
             <blockquote className="verse-quote" data-testid="text-quran-translation">
-              “And of His signs is that He created for you from yourselves mates that you may find tranquility in them; and He placed between you affection and mercy. Indeed in that are signs for a people who give thought.”
-              <cite data-testid="text-quran-reference">Qur’an · Surah Ar-Rum · 30:21</cite>
+              “And among His signs is that He created for you mates from among yourselves, that you may find tranquility in them; and He placed between you affection and mercy.”
+              <cite data-testid="text-quran-reference">— Surah Ar-Rum (30:21)</cite>
             </blockquote>
           </header>
 
@@ -240,7 +238,6 @@ function App() {
                 </div>
               ))}
             </div>
-            <p className="timezone-note" data-testid="text-countdown-timezone">Friday, 20 November 2026 · 6:00 PM · Pakistan Standard Time (UTC+05:00)</p>
           </section>
 
           <section className="events-section" id="events" aria-labelledby="events-title" data-testid="section-events">
@@ -253,7 +250,6 @@ function App() {
               <article className="event-card" data-testid="event-baraat">
                 <div className="event-card-head"><span>Day 01</span><span>Friday</span></div>
                 <h3>The Baraat</h3>
-                <p className="event-card-date">20 November 2026</p>
                 <p className="event-description">Join us for the vibrant Baraat procession, grand reception dinner, and emotional Rukhsati farewell.</p>
                 <div className="event-times">
                   <p><span>Function Timing:</span><strong>06:00 PM to 09:30 PM</strong></p>
@@ -264,7 +260,6 @@ function App() {
               <article className="event-card" data-testid="event-walima">
                 <div className="event-card-head"><span>Day 02</span><span>Saturday</span></div>
                 <h3>The Walima</h3>
-                <p className="event-card-date">21 November 2026</p>
                 <p className="event-description">A joyful reception dinner hosted by the groom's family to share blessings, happiness, and delicious food with loved ones.</p>
                 <div className="event-times">
                   <p><span>Function Timing:</span><strong>06:00 PM to 09:30 PM</strong></p>
@@ -276,51 +271,41 @@ function App() {
           </section>
 
           <section className="venues-section" id="venues" aria-labelledby="venues-title" data-testid="section-venues">
-            <div className="venue-intro">
-              <p className="eyebrow">Venues &amp; directions</p>
-              <h2 id="venues-title">Event Locations</h2>
-              <p>Choose a venue to open directions in Google Maps.</p>
-              <button className="outline-button calendar-button" type="button" onClick={makeCalendarFile} data-testid="button-add-to-calendar">
-                <CalendarDays size={16} /> Add both events to calendar
-              </button>
+            <div className="venue-overview">
+              <div className="venue-intro">
+                <p className="eyebrow">Venues &amp; directions</p>
+                <h2 id="venues-title">Event Locations</h2>
+                <p>Tap the map buttons below to easily open live GPS directions to the celebration venues:</p>
+                <div className="venue-actions">
+                  <a className="outline-button" href={baraatMap} target="_blank" rel="noreferrer" data-testid="link-map-baraat">
+                    <MapPin size={14} /> Baraat Location Map
+                  </a>
+                  <a className="outline-button" href={walimaMap} target="_blank" rel="noreferrer" data-testid="link-map-walima">
+                    <MapPin size={14} /> Walima Location Map
+                  </a>
+                  <button className="outline-button calendar-button" type="button" onClick={makeCalendarFile} data-testid="button-add-to-calendar">
+                    <CalendarDays size={14} /> Add to Calendar
+                  </button>
+                </div>
+              </div>
+              <aside className="dress-code" data-testid="text-dress-code">
+                <p className="eyebrow">Dress code</p>
+                <p>Formal Traditional or Evening Wear</p>
+                <span>We warmly look forward to celebrating together in festive formal attire.</span>
+              </aside>
             </div>
-            <div className="venue-list">
-              <article className="venue-row" data-testid="card-venue-baraat">
-                <div className="venue-mark"><MapPin size={17} /></div>
-                <div><span>Baraat · Friday, 20 November</span><h3>Ahmad Marriage Hall</h3></div>
-                <a className="map-button" href={baraatMap} target="_blank" rel="noreferrer" data-testid="link-map-baraat">Directions <ArrowUpRight size={15} /></a>
-              </article>
-              <article className="venue-row" data-testid="card-venue-walima">
-                <div className="venue-mark"><MapPin size={17} /></div>
-                <div><span>Walima · Saturday, 21 November</span><h3>Bhatti Marriage Hall</h3></div>
-                <a className="map-button" href={walimaMap} target="_blank" rel="noreferrer" data-testid="link-map-walima">Directions <ArrowUpRight size={15} /></a>
-              </article>
-            </div>
-            <aside className="dress-code" data-testid="text-dress-code">
-              <p className="eyebrow">Dress code</p>
-              <p>Formal Traditional or Evening Wear</p>
-              <span>We warmly look forward to celebrating together in festive formal attire.</span>
-            </aside>
-          </section>
 
-          <section className="gallery-section" aria-label="Wedding photographs" data-testid="section-gallery">
-            <div className="gallery-placeholder" data-testid="empty-gallery">
-              <div className="gallery-frame" aria-hidden="true" />
-              <p className="eyebrow">A place for memories</p>
-              <h2>Our photographs, soon</h2>
-              <p>We look forward to sharing moments from our celebrations with you.</p>
-            </div>
-          </section>
+            <section className="rsvp-section" aria-labelledby="rsvp-title" data-testid="section-rsvp">
+              <p className="presence-note" id="rsvp-title">Your presence would complete our happiness</p>
+              <a className="gold-button rsvp-button" href={rsvpUrl} target="_blank" rel="noreferrer" data-testid="link-rsvp">
+                Confirm Your Attendance (RSVP) <ArrowUpRight size={14} />
+              </a>
+              <p className="rsvp-deadline">Kindly respond before November 1, 2026</p>
+            </section>
 
-          <section className="rsvp-section" aria-labelledby="rsvp-title" data-testid="section-rsvp">
-            <p className="eyebrow">Your presence is a gift</p>
-            <h2 id="rsvp-title">Will you join us?</h2>
-            <p>Kindly let our families know if we may count you among our guests.</p>
-            <a className="gold-button rsvp-button" href={rsvpUrl} target="_blank" rel="noreferrer" data-testid="link-rsvp">Respond to invitation <ArrowUpRight size={15} /></a>
-          </section>
-
-          <footer className="contact-section" data-testid="section-contacts">
-            <div className="contact-copy"><p className="eyebrow">Questions or wishes</p><h2>Reach our families</h2><p>We would be happy to hear from you.</p></div>
+            <div className="contact-section" data-testid="section-contacts">
+              <p className="eyebrow">For queries &amp; RSVP contact</p>
+              <h2>Contact Information</h2>
             <div className="contact-list" aria-label="Family contact numbers">
               {contacts.map((number, index) => (
                 <a className="contact-link" href={`tel:${number.replaceAll('-', '')}`} key={number} data-testid={`link-contact-${index + 1}`}>
@@ -328,9 +313,13 @@ function App() {
                 </a>
               ))}
             </div>
-            <div className="footer-bottom"><span>With love, Asim &amp; Sana</span><span>20 — 21 November 2026</span></div>
-          </footer>
+            </div>
+          </section>
         </article>
+        <footer className="closing-footer">
+          <p>Asim Abdul Ghafoor &amp; Sana Abdul Khaliq</p>
+          <span>#ASIMANDSANA2026 · WITH WARM GRATITUDE</span>
+        </footer>
       </div>
       <StarPointer />
       <a href="#couple-title" className="skip-link" data-testid="link-skip-to-invitation"><ArrowDown size={14} /> Invitation details</a>
