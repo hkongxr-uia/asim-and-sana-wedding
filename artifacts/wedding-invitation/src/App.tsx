@@ -177,6 +177,49 @@ function timeUntilBaraat() {
   };
 }
 
+const SPARKLES = Array.from({ length: 32 }, (_, i) => {
+  const isStar = i % 3 === 0;
+  const size = isStar ? 3.5 + (i % 3) * 1.2 : 2 + (i % 4) * 0.7;
+  const left = (i * 3.37 + (i % 7) * 2.1) % 96 + 2;
+  const duration = 8.5 + (i % 7) * 1.2;
+  const delay = -((i * 1.6) % 11);
+  const drift = ((i % 2 === 0 ? 1 : -1) * (14 + (i % 4) * 7));
+  const opacity = 0.22 + (i % 5) * 0.05; // 0.22 to 0.42 (delicate, non-distracting)
+
+  return {
+    id: i,
+    isStar,
+    size,
+    left: `${left}%`,
+    duration: `${duration}s`,
+    delay: `${delay}s`,
+    drift: `${drift}px`,
+    opacity,
+  };
+});
+
+function FallingSparkles() {
+  return (
+    <div className="falling-sparkles-container" aria-hidden="true" data-testid="falling-sparkles">
+      {SPARKLES.map((s) => (
+        <span
+          key={s.id}
+          className={`falling-sparkle${s.isStar ? ' is-star' : ''}`}
+          style={{
+            left: s.left,
+            width: `${s.size}px`,
+            height: `${s.size}px`,
+            '--fall-duration': s.duration,
+            '--fall-delay': s.delay,
+            '--drift-x': s.drift,
+            '--sparkle-opacity': s.opacity,
+          } as React.CSSProperties}
+        />
+      ))}
+    </div>
+  );
+}
+
 function StarPointer() {
   const enabled = useRef(false);
   const cursorRef = useRef<HTMLDivElement>(null);
@@ -334,8 +377,9 @@ function App() {
   function fadeInMusic(audio: HTMLAudioElement) {
     if (musicFadeFrameRef.current !== null) window.cancelAnimationFrame(musicFadeFrameRef.current);
     const startedAt = performance.now();
-    const duration = 2_400;
-    const targetVolume = 0.34;
+    const duration = 3_000;
+    const targetVolume = 0.18;
+    audio.volume = 0;
     const step = (now: number) => {
       const progress = Math.min(1, (now - startedAt) / duration);
       audio.volume = targetVolume * progress;
@@ -366,7 +410,7 @@ function App() {
     if (stage === 'bismillah') {
       audio.loop = false;
       audio.muted = false;
-      audio.volume = 1;
+      audio.volume = 0.65;
     } else {
       audio.loop = true;
       audio.muted = musicMutedRef.current;
@@ -408,7 +452,12 @@ function App() {
     const nextMuted = !musicMutedRef.current;
     musicMutedRef.current = nextMuted;
     setMusicMuted(nextMuted);
-    if (musicAudioRef.current) musicAudioRef.current.muted = nextMuted;
+    if (musicAudioRef.current) {
+      musicAudioRef.current.muted = nextMuted;
+      if (!nextMuted && pendingAudioStageRef.current === 'music') {
+        fadeInMusic(musicAudioRef.current);
+      }
+    }
   }
 
   function stopAudioSequence() {
@@ -443,7 +492,6 @@ function App() {
     setPlaying(false);
     setInvitationOpen(true);
     startAudioSequence();
-    window.setTimeout(() => document.getElementById('couple-title')?.focus(), 250);
   }
 
   function returnToCover() {
@@ -558,9 +606,9 @@ function App() {
           <header className="invitation-header">
             <p className="bismillah" lang="ar" dir="rtl" data-testid="text-bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
             <div className="foil-rule" aria-hidden="true"><span /></div>
-            <h1 className="couple-names" id="couple-title" tabIndex={-1} data-testid="text-couple-names">
+            <h1 className="couple-names" id="couple-title" data-testid="text-couple-names">
               <span>{language === 'ur' ? 'عاصم عبد الغفور' : 'Asim Abdul Ghafoor'}</span>
-              <span className="ampersand">&amp;</span>
+              <span className="ampersand">{language === 'ur' ? 'اور' : '&'}</span>
               <span>{language === 'ur' ? 'ثناء عبد الخالق' : 'Sana Abdul Khaliq'}</span>
             </h1>
             <p className="invitation-copy">{t.invitationCopy}</p>
@@ -693,10 +741,11 @@ function App() {
           </section>
         </article>
         <footer className="closing-footer">
-          <p>{language === 'ur' ? 'عاصم عبد الغفور & ثناء عبد الخالق' : 'Asim Abdul Ghafoor & Sana Abdul Khaliq'}</p>
+          <p>{language === 'ur' ? 'عاصم عبد الغفور اور ثناء عبد الخالق' : 'Asim Abdul Ghafoor & Sana Abdul Khaliq'}</p>
           <span>{t.footerGratitude}</span>
         </footer>
       </div>
+      <FallingSparkles />
       <StarPointer />
       <a href="#couple-title" className="skip-link" data-testid="link-skip-to-invitation"><ArrowDown size={14} /> {t.skipLink}</a>
       <span className="sr-only">{t.countdownScreenReader}</span>
