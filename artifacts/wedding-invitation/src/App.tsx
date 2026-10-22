@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { ArrowDown, ArrowLeft, ArrowUpRight, CalendarDays, Clock3, MapPin, Phone, Play, Sparkles, Star } from 'lucide-react';
+import { ArrowDown, ArrowLeft, ArrowUpRight, CalendarDays, Clock3, MapPin, Phone, Play, Sparkles, Star, Volume2, VolumeX } from 'lucide-react';
+import bismillahAudio from '@assets/0_bismillah_1792636329790.mp3';
 import introVideoWebm from '@assets/0_intro_1792477792582.webm';
 import introVideoMp4 from '@assets/0_intro_1792477792582.mp4';
 import introPoster from '@assets/0_intro_1792477792582-poster.jpg';
+import weddingMusic from '@assets/0_wedding-music_1792636335449.mp3';
 
 const baraatMap = 'https://www.google.com/maps/place/Ahmad+Marriage+Hall/@31.6609563,74.2814482,17z/data=!3m1!4b1!4m6!3m5!1s0x39191f5123d53f13:0xfa85db4f4b865520!8m2!3d31.6609563!4d74.2814482!16s%2Fg%2F11pdrb8n42?entry=tts&g_ep=EgoyMDI2MDkxNi4wIPu8ASoASAFQAw%3D%3D&skid=99144b77-a619-4786-be4b-6d2ec67fc079';
 const walimaMap = 'https://google.com/maps/place/Bhatti+Marriage+Hall/@31.6518502,74.2809667,17z/data=!3m1!4b1!4m6!3m5!1s0x39191e99388f08cf:0x253df6cddb41eafd!8m2!3d31.6518502!4d74.2835416!16s%2Fg%2F11b7q8j71n?entry=tts&g_ep=EgoyMDI2MDkwMi4wIPu8ASoASAFQAw%3D%3D&skid=306e2a1e-078b-4f70-ac33-77cbcc48c012';
@@ -31,6 +33,10 @@ const copy = {
     switchToEnglish: 'Switch language to English',
     languageButtonUrdu: 'اردو',
     languageButtonEnglish: 'English',
+    muteMusic: 'Mute background music',
+    unmuteMusic: 'Unmute background music',
+    enableAudio: 'Enable invitation audio',
+    audioNeedsTap: 'Tap the sound button to start the invitation audio.',
     invitationCopy: 'Together with their families, we warmly invite you to celebrate our Big moment. Your presence, love, and prayers mean the world to us as we begin this blessed new journey together.',
     quranQuote: '“And among His signs is that He created for you mates from among yourselves, that you may find tranquility in them; and He placed between you affection and mercy.”',
     quranReference: '— Surah Ar-Rum (30:21)',
@@ -99,6 +105,10 @@ const copy = {
     switchToEnglish: 'زبان انگریزی میں تبدیل کریں',
     languageButtonUrdu: 'اردو',
     languageButtonEnglish: 'English',
+    muteMusic: 'موسیقی بند کریں',
+    unmuteMusic: 'موسیقی چلائیں',
+    enableAudio: 'دعوت کی آڈیو چلائیں',
+    audioNeedsTap: 'دعوت کی آڈیو چلانے کے لیے آواز کے بٹن کو دبائیں۔',
     invitationCopy: 'اپنے اہلِ خانہ کے ساتھ، ہم آپ کو اپنی خوشی کے اس خاص موقع پر شرکت کی دعوت دیتے ہیں۔ آپ کی موجودگی، محبت اور دعائیں ہمارے لیے بہت قیمتی ہیں، کیونکہ ہم اپنی اس بابرکت نئی زندگی کا آغاز کر رہے ہیں۔',
     quranQuote: 'اور اُس کی نشانیوں میں سے یہ ہے کہ اُس نے تمہارے لیے تم ہی میں سے جوڑے بنائے تاکہ تم اُن سے سکون پاؤ، اور اُس نے تمہارے درمیان محبت اور رحمت رکھ دی۔',
     quranReference: '— سورۃ الروم (۳۰:۲۱)',
@@ -270,13 +280,22 @@ function makeCalendarFile(language: Language) {
 
 function App() {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const bismillahAudioRef = useRef<HTMLAudioElement>(null);
+  const musicAudioRef = useRef<HTMLAudioElement>(null);
   const fireworksTimerRef = useRef<number | null>(null);
+  const musicFadeFrameRef = useRef<number | null>(null);
+  const audioGenerationRef = useRef(0);
+  const audioSequenceStartedRef = useRef(false);
+  const pendingAudioStageRef = useRef<'bismillah' | 'music'>('bismillah');
+  const musicMutedRef = useRef(false);
   const [invitationOpen, setInvitationOpen] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [playbackFailed, setPlaybackFailed] = useState(false);
   const [datesRevealed, setDatesRevealed] = useState(false);
   const [fireworksActive, setFireworksActive] = useState(false);
   const [language, setLanguage] = useState<Language>('en');
+  const [musicMuted, setMusicMuted] = useState(false);
+  const [audioNeedsGesture, setAudioNeedsGesture] = useState(false);
   const [countdown, setCountdown] = useState(timeUntilBaraat);
   const t = copy[language];
   const sixPm = language === 'ur' ? `${localizeDigits('06:00', language)} ${t.pm}` : '06:00 PM';
@@ -290,6 +309,10 @@ function App() {
     return () => {
       window.clearInterval(timer);
       if (fireworksTimerRef.current !== null) window.clearTimeout(fireworksTimerRef.current);
+      if (musicFadeFrameRef.current !== null) window.cancelAnimationFrame(musicFadeFrameRef.current);
+      audioGenerationRef.current += 1;
+      bismillahAudioRef.current?.pause();
+      musicAudioRef.current?.pause();
     };
   }, []);
 
@@ -308,6 +331,99 @@ function App() {
     }, 3_000);
   }
 
+  function fadeInMusic(audio: HTMLAudioElement) {
+    if (musicFadeFrameRef.current !== null) window.cancelAnimationFrame(musicFadeFrameRef.current);
+    const startedAt = performance.now();
+    const duration = 2_400;
+    const targetVolume = 0.34;
+    const step = (now: number) => {
+      const progress = Math.min(1, (now - startedAt) / duration);
+      audio.volume = targetVolume * progress;
+      if (progress < 1) {
+        musicFadeFrameRef.current = window.requestAnimationFrame(step);
+      } else {
+        musicFadeFrameRef.current = null;
+      }
+    };
+    musicFadeFrameRef.current = window.requestAnimationFrame(step);
+  }
+
+  async function playAudioStage(stage: 'bismillah' | 'music') {
+    pendingAudioStageRef.current = stage;
+    const generation = audioGenerationRef.current;
+    const audio = stage === 'bismillah' ? bismillahAudioRef.current : musicAudioRef.current;
+    if (!audio) {
+      setAudioNeedsGesture(true);
+      return;
+    }
+
+    if (musicFadeFrameRef.current !== null) {
+      window.cancelAnimationFrame(musicFadeFrameRef.current);
+      musicFadeFrameRef.current = null;
+    }
+    audio.pause();
+    audio.currentTime = 0;
+    if (stage === 'bismillah') {
+      audio.loop = false;
+      audio.muted = false;
+      audio.volume = 1;
+    } else {
+      audio.loop = true;
+      audio.muted = musicMutedRef.current;
+      audio.volume = 0;
+    }
+
+    try {
+      await audio.play();
+      if (generation !== audioGenerationRef.current) {
+        audio.pause();
+        return;
+      }
+      setAudioNeedsGesture(false);
+      if (stage === 'music') fadeInMusic(audio);
+    } catch {
+      if (generation === audioGenerationRef.current) setAudioNeedsGesture(true);
+    }
+  }
+
+  function startAudioSequence() {
+    if (audioSequenceStartedRef.current) return;
+    audioSequenceStartedRef.current = true;
+    pendingAudioStageRef.current = 'bismillah';
+    audioGenerationRef.current += 1;
+    void playAudioStage('bismillah');
+  }
+
+  function toggleMusic() {
+    if (audioNeedsGesture) {
+      if (pendingAudioStageRef.current === 'music') {
+        musicMutedRef.current = false;
+        setMusicMuted(false);
+        if (musicAudioRef.current) musicAudioRef.current.muted = false;
+      }
+      void playAudioStage(pendingAudioStageRef.current);
+      return;
+    }
+
+    const nextMuted = !musicMutedRef.current;
+    musicMutedRef.current = nextMuted;
+    setMusicMuted(nextMuted);
+    if (musicAudioRef.current) musicAudioRef.current.muted = nextMuted;
+  }
+
+  function stopAudioSequence() {
+    audioGenerationRef.current += 1;
+    audioSequenceStartedRef.current = false;
+    pendingAudioStageRef.current = 'bismillah';
+    setAudioNeedsGesture(false);
+    if (musicFadeFrameRef.current !== null) {
+      window.cancelAnimationFrame(musicFadeFrameRef.current);
+      musicFadeFrameRef.current = null;
+    }
+    bismillahAudioRef.current?.pause();
+    musicAudioRef.current?.pause();
+  }
+
   async function startFilm() {
     setPlaybackFailed(false);
     const video = videoRef.current;
@@ -322,11 +438,16 @@ function App() {
   }
 
   function openInvitation() {
+    const video = videoRef.current;
+    if (video && !video.ended) video.pause();
+    setPlaying(false);
     setInvitationOpen(true);
+    startAudioSequence();
     window.setTimeout(() => document.getElementById('couple-title')?.focus(), 250);
   }
 
   function returnToCover() {
+    stopAudioSequence();
     const video = videoRef.current;
     if (video) {
       video.pause();
@@ -340,6 +461,25 @@ function App() {
 
   return (
     <main className="invitation-page" lang={language} dir={language === 'ur' ? 'rtl' : 'ltr'} data-testid="page-wedding-invitation">
+      <audio
+        ref={bismillahAudioRef}
+        src={bismillahAudio}
+        preload="none"
+        aria-hidden="true"
+        onEnded={() => { void playAudioStage('music'); }}
+        onError={() => setAudioNeedsGesture(true)}
+        data-testid="audio-bismillah"
+      />
+      <audio
+        ref={musicAudioRef}
+        src={weddingMusic}
+        preload="none"
+        loop
+        muted={musicMuted}
+        aria-hidden="true"
+        onError={() => setAudioNeedsGesture(true)}
+        data-testid="audio-background-music"
+      />
       <section
         className={`intro-screen${invitationOpen ? ' is-opening' : ''}`}
         aria-label={t.openingLabel}
@@ -395,8 +535,22 @@ function App() {
           >
             {language === 'en' ? t.languageButtonUrdu : t.languageButtonEnglish}
           </button>
+          <button
+            className="nav-audio"
+            type="button"
+            onClick={toggleMusic}
+            aria-label={audioNeedsGesture ? t.enableAudio : musicMuted ? t.unmuteMusic : t.muteMusic}
+            aria-pressed={musicMuted}
+            title={audioNeedsGesture ? t.enableAudio : musicMuted ? t.unmuteMusic : t.muteMusic}
+            data-testid="button-audio-toggle"
+          >
+            {musicMuted && !audioNeedsGesture
+              ? <VolumeX size={13} aria-hidden="true" />
+              : <Volume2 size={13} aria-hidden="true" />}
+          </button>
           <a className="nav-rsvp" href={rsvpUrl} target="_blank" rel="noreferrer" data-testid="link-nav-rsvp">{t.rsvp}</a>
         </nav>
+        {audioNeedsGesture && <p className="audio-hint" role="status" aria-live="polite">{t.audioNeedsTap}</p>}
 
         <article className="invitation-card" data-testid="card-main-invitation">
           <div className="medallion medallion-top" aria-hidden="true" />

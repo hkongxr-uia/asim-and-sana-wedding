@@ -1778,6 +1778,28 @@ body {
   transition: border-color .2s ease, background .2s ease, color .2s ease;
 }
 .nav-language:hover { border-color: var(--gold-400); background: rgba(17, 68, 52, .65); color: var(--gold-100); }
+.nav-audio {
+  display: inline-flex;
+  width: 1.5rem;
+  min-width: 1.5rem;
+  min-height: 1.5rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid rgba(226, 190, 86, .22);
+  border-radius: 50%;
+  background: rgba(17, 68, 52, .32);
+  color: var(--gold-300);
+  cursor: pointer;
+  transition: border-color .2s ease, background .2s ease, color .2s ease;
+}
+.nav-audio:hover { border-color: var(--gold-400); background: rgba(17, 68, 52, .65); color: var(--gold-100); }
+.audio-hint {
+  margin: .35rem auto 0;
+  color: var(--gold-200);
+  text-align: center;
+  font: 400 .5rem/1.5 'Montserrat', sans-serif;
+}
 
 .star-cursor {
   width: 20px;
@@ -1829,7 +1851,8 @@ body {
 
 .invitation-page[lang='ur'] .invitation-card,
 .invitation-page[lang='ur'] .site-nav,
-.invitation-page[lang='ur'] .intro-controls {
+.invitation-page[lang='ur'] .intro-controls,
+.invitation-page[lang='ur'] .audio-hint {
   font-family: 'Amiri', serif;
 }
 .invitation-page[lang='ur'] .site-nav > *,
@@ -1907,6 +1930,8 @@ body {
 @media (max-width: 640px) {
   .site-nav { gap: .2rem; }
   .nav-language { min-height: 1.35rem; padding-inline: .28rem; font-size: .44rem; }
+  .nav-audio { width: 1.35rem; min-width: 1.35rem; min-height: 1.35rem; }
+  .audio-hint { font-size: .54rem; }
   .nav-cover, .site-nav > a:not(.nav-rsvp) { gap: .12rem; }
   .firework-burst-1 { left: 8%; }
   .firework-burst-2 { left: 92%; }
