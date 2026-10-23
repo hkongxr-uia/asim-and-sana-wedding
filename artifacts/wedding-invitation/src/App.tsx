@@ -65,9 +65,11 @@ const copy = {
     walimaDescription: "A joyful reception dinner hosted by the groom's family to share blessings, happiness, and delicious food with loved ones.",
     functionTiming: 'Function Timing:',
     baraatArrival: 'Baraat Arrival:',
-    dinnerRukhsati: 'Dinner & Rukhsati:',
-    guestWelcome: 'Guest Welcome:',
     dinner: 'Dinner:',
+    rukhsati: 'Rukhsati:',
+    guestWelcome: 'Guest Welcome:',
+    ahmadMarriageHall: 'Ahmad Marriage Hall',
+    bhattiMarriageHall: 'Bhatti Marriage Hall',
     venueEyebrow: 'Venues & directions',
     eventLocations: 'Event Locations',
     mapDirections: 'Tap the map buttons below to easily open live GPS directions to the celebration venues:',
@@ -137,9 +139,11 @@ const copy = {
     walimaDescription: 'دولہے کے اہلِ خانہ کی جانب سے خوشی اور برکت بانٹنے کے لیے ایک پُرمسرت استقبالیہ عشائیہ۔',
     functionTiming: 'تقریب کا وقت:',
     baraatArrival: 'بارات کی آمد:',
-    dinnerRukhsati: 'عشائیہ اور رخصتی:',
+    dinner: 'دسترخوان:',
+    rukhsati: 'رخصتی:',
     guestWelcome: 'مہمانوں کا استقبال:',
-    dinner: 'عشائیہ:',
+    ahmadMarriageHall: 'احمد میرج ہال',
+    bhattiMarriageHall: 'بھٹی میرج ہال',
     venueEyebrow: 'مقامات اور رہنمائی',
     eventLocations: 'تقریبات کے مقامات',
     mapDirections: 'تقریبات کے مقامات تک راستہ دیکھنے کے لیے نیچے دیے گئے نقشے کے بٹن دبائیں:',
@@ -177,48 +181,7 @@ function timeUntilBaraat() {
   };
 }
 
-const SPARKLES = Array.from({ length: 32 }, (_, i) => {
-  const isStar = i % 3 === 0;
-  const size = isStar ? 3.5 + (i % 3) * 1.2 : 2 + (i % 4) * 0.7;
-  const left = (i * 3.37 + (i % 7) * 2.1) % 96 + 2;
-  const duration = 8.5 + (i % 7) * 1.2;
-  const delay = -((i * 1.6) % 11);
-  const drift = ((i % 2 === 0 ? 1 : -1) * (14 + (i % 4) * 7));
-  const opacity = 0.22 + (i % 5) * 0.05; // 0.22 to 0.42 (delicate, non-distracting)
 
-  return {
-    id: i,
-    isStar,
-    size,
-    left: `${left}%`,
-    duration: `${duration}s`,
-    delay: `${delay}s`,
-    drift: `${drift}px`,
-    opacity,
-  };
-});
-
-function FallingSparkles() {
-  return (
-    <div className="falling-sparkles-container" aria-hidden="true" data-testid="falling-sparkles">
-      {SPARKLES.map((s) => (
-        <span
-          key={s.id}
-          className={`falling-sparkle${s.isStar ? ' is-star' : ''}`}
-          style={{
-            left: s.left,
-            width: `${s.size}px`,
-            height: `${s.size}px`,
-            '--fall-duration': s.duration,
-            '--fall-delay': s.delay,
-            '--drift-x': s.drift,
-            '--sparkle-opacity': s.opacity,
-          } as React.CSSProperties}
-        />
-      ))}
-    </div>
-  );
-}
 
 function StarPointer() {
   const enabled = useRef(false);
@@ -270,55 +233,82 @@ function FireworksOverlay() {
 }
 
 function makeCalendarFile(language: Language) {
-  const calendarText = language === 'ur'
-    ? {
-        baraatSummary: 'بارات — عاصم اور ثناء',
-        baraatLocation: 'احمد میرج ہال',
-        baraatDescription: 'تقریب شام ۶:۰۰ سے ۹:۳۰ بجے تک۔ بارات کی آمد شام ۶:۰۰ بجے۔ عشائیہ اور رخصتی شام ۸:۰۰ بجے۔',
-        walimaSummary: 'ولیمہ — عاصم اور ثناء',
-        walimaLocation: 'بھٹی میرج ہال',
-        walimaDescription: 'تقریب شام ۶:۰۰ سے ۹:۳۰ بجے تک۔ مہمانوں کا استقبال شام ۶:۰۰ بجے۔ عشائیہ شام ۸:۰۰ بجے۔',
-      }
-    : {
-        baraatSummary: 'Baraat — Asim and Sana',
-        baraatLocation: 'Ahmad Marriage Hall',
-        baraatDescription: 'Function 6:00–9:30 PM. Arrival 6:00 PM. Dinner and Rukhsati 8:00 PM.',
-        walimaSummary: 'Walima — Asim and Sana',
-        walimaLocation: 'Bhatti Marriage Hall',
-        walimaDescription: 'Function 6:00–9:30 PM. Guest welcome 6:00 PM. Dinner 8:00 PM.',
-      };
-  const calendar = [
+  // Build ICS content for both events
+  const icsLines = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
     'PRODID:-//Asim and Sana//Wedding Invitation//EN',
     'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH',
     'BEGIN:VEVENT',
-    'UID:asim-sana-baraat-20261120@example.com',
+    'UID:asim-sana-baraat-20261120@wedding.local',
     'DTSTAMP:20261001T000000Z',
     'DTSTART:20261120T130000Z',
     'DTEND:20261120T163000Z',
-    `SUMMARY:${calendarText.baraatSummary}`,
-    `LOCATION:${calendarText.baraatLocation}`,
-    `DESCRIPTION:${calendarText.baraatDescription}`,
+    'SUMMARY:Baraat \u2014 Asim & Sana',
+    'LOCATION:Ahmad Marriage Hall\\, Lahore',
+    'DESCRIPTION:Baraat Arrival 6:00 PM | Dinner 8:30 PM | Rukhsati 9:30 PM',
     'END:VEVENT',
     'BEGIN:VEVENT',
-    'UID:asim-sana-walima-20261121@example.com',
+    'UID:asim-sana-walima-20261121@wedding.local',
     'DTSTAMP:20261001T000000Z',
     'DTSTART:20261121T130000Z',
     'DTEND:20261121T163000Z',
-    `SUMMARY:${calendarText.walimaSummary}`,
-    `LOCATION:${calendarText.walimaLocation}`,
-    `DESCRIPTION:${calendarText.walimaDescription}`,
+    'SUMMARY:Walima \u2014 Asim & Sana',
+    'LOCATION:Bhatti Marriage Hall\\, Lahore',
+    'DESCRIPTION:Guest Welcome 6:00 PM | Dinner 8:30 PM',
     'END:VEVENT',
     'END:VCALENDAR',
   ].join('\r\n');
-  const blob = new Blob([calendar], { type: 'text/calendar;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const anchor = document.createElement('a');
-  anchor.href = url;
-  anchor.download = 'asim-and-sana-wedding.ics';
-  anchor.click();
-  URL.revokeObjectURL(url);
+
+  // Detect platform
+  const ua = navigator.userAgent;
+  const isIOS = /iPad|iPhone|iPod/.test(ua);
+  const isAndroid = /Android/.test(ua);
+
+  if (isIOS) {
+    // iOS: webcal:// triggers native Calendar app
+    const encoded = encodeURIComponent(icsLines);
+    const dataUrl = 'data:text/calendar;charset=utf-8,' + encoded;
+    // Try webcal data URI (works on iOS Safari)
+    const link = document.createElement('a');
+    link.href = dataUrl;
+    link.download = 'asim-sana-wedding.ics';
+    link.click();
+  } else if (isAndroid) {
+    // Android: download ICS, OS will offer to open with Calendar
+    const blob = new Blob([icsLines], { type: 'text/calendar;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'asim-sana-wedding.ics';
+    a.click();
+    URL.revokeObjectURL(url);
+  } else {
+    // Desktop / other: open Google Calendar add-event page for Baraat
+    const baraatUrl = new URL('https://calendar.google.com/calendar/render');
+    baraatUrl.searchParams.set('action', 'TEMPLATE');
+    baraatUrl.searchParams.set('text', language === 'ur' ? 'بارات — عاصم اور ثناء' : 'Baraat — Asim & Sana');
+    baraatUrl.searchParams.set('dates', '20261120T130000Z/20261120T163000Z');
+    baraatUrl.searchParams.set('details', language === 'ur'
+      ? 'بارات کی آمد شام 6:00 | Dinner شام 8:30 | رخصتی شام 9:30'
+      : 'Baraat Arrival 6:00 PM | Dinner 8:30 PM | Rukhsati 9:30 PM');
+    baraatUrl.searchParams.set('location', 'Ahmad Marriage Hall, Lahore');
+    window.open(baraatUrl.toString(), '_blank', 'noopener,noreferrer');
+
+    // Also open Walima in a second tab after a short delay
+    setTimeout(() => {
+      const walimaUrl = new URL('https://calendar.google.com/calendar/render');
+      walimaUrl.searchParams.set('action', 'TEMPLATE');
+      walimaUrl.searchParams.set('text', language === 'ur' ? 'ولیمہ — عاصم اور ثناء' : 'Walima — Asim & Sana');
+      walimaUrl.searchParams.set('dates', '20261121T130000Z/20261121T163000Z');
+      walimaUrl.searchParams.set('details', language === 'ur'
+        ? 'مہمانوں کا استقبال شام 6:00 | Dinner شام 8:30'
+        : 'Guest Welcome 6:00 PM | Dinner 8:30 PM');
+      walimaUrl.searchParams.set('location', 'Bhatti Marriage Hall, Lahore');
+      window.open(walimaUrl.toString(), '_blank', 'noopener,noreferrer');
+    }, 400);
+  }
 }
 
 function App() {
@@ -327,6 +317,7 @@ function App() {
   const musicAudioRef = useRef<HTMLAudioElement>(null);
   const fireworksTimerRef = useRef<number | null>(null);
   const musicFadeFrameRef = useRef<number | null>(null);
+  const musicDelayTimerRef = useRef<number | null>(null);
   const audioGenerationRef = useRef(0);
   const audioSequenceStartedRef = useRef(false);
   const pendingAudioStageRef = useRef<'bismillah' | 'music'>('bismillah');
@@ -336,15 +327,17 @@ function App() {
   const [playbackFailed, setPlaybackFailed] = useState(false);
   const [datesRevealed, setDatesRevealed] = useState(false);
   const [fireworksActive, setFireworksActive] = useState(false);
+  const [revealBtnReady, setRevealBtnReady] = useState(false);
   const [language, setLanguage] = useState<Language>('en');
   const [musicMuted, setMusicMuted] = useState(false);
   const [audioNeedsGesture, setAudioNeedsGesture] = useState(false);
   const [countdown, setCountdown] = useState(timeUntilBaraat);
   const t = copy[language];
-  const sixPm = language === 'ur' ? `${localizeDigits('06:00', language)} ${t.pm}` : '06:00 PM';
-  const eightPm = language === 'ur' ? `${localizeDigits('08:00', language)} ${t.pm}` : '08:00 PM';
+  const sixPm = language === 'ur' ? `06:00 ${t.pm}` : '06:00 PM';
+  const eightThirtyPm = language === 'ur' ? `08:30 ${t.pm}` : '08:30 PM';
+  const nineThirtyPm = language === 'ur' ? `09:30 ${t.pm}` : '09:30 PM';
   const functionTime = language === 'ur'
-    ? `${localizeDigits('06:00', language)} ${t.pm} تا ${localizeDigits('09:30', language)} ${t.pm}`
+    ? `06:00 ${t.pm} تا 09:30 ${t.pm}`
     : '06:00 PM to 09:30 PM';
 
   useEffect(() => {
@@ -353,6 +346,7 @@ function App() {
       window.clearInterval(timer);
       if (fireworksTimerRef.current !== null) window.clearTimeout(fireworksTimerRef.current);
       if (musicFadeFrameRef.current !== null) window.cancelAnimationFrame(musicFadeFrameRef.current);
+      if (musicDelayTimerRef.current !== null) window.clearTimeout(musicDelayTimerRef.current);
       audioGenerationRef.current += 1;
       bismillahAudioRef.current?.pause();
       musicAudioRef.current?.pause();
@@ -363,6 +357,13 @@ function App() {
     document.documentElement.lang = language;
     document.documentElement.dir = language === 'ur' ? 'rtl' : 'ltr';
   }, [language]);
+
+  // Trigger pop-in animation on the reveal button once invitation is open
+  useEffect(() => {
+    if (!invitationOpen || datesRevealed) return;
+    const t = window.setTimeout(() => setRevealBtnReady(true), 120);
+    return () => window.clearTimeout(t);
+  }, [invitationOpen, datesRevealed]);
 
   function revealWeddingDates() {
     setDatesRevealed(true);
@@ -381,8 +382,8 @@ function App() {
     const targetVolume = 0.18;
     audio.volume = 0;
     const step = (now: number) => {
-      const progress = Math.min(1, (now - startedAt) / duration);
-      audio.volume = targetVolume * progress;
+      const progress = Math.min(1, Math.max(0, (now - startedAt) / duration));
+      audio.volume = Math.min(1, Math.max(0, targetVolume * progress));
       if (progress < 1) {
         musicFadeFrameRef.current = window.requestAnimationFrame(step);
       } else {
@@ -465,6 +466,10 @@ function App() {
     audioSequenceStartedRef.current = false;
     pendingAudioStageRef.current = 'bismillah';
     setAudioNeedsGesture(false);
+    if (musicDelayTimerRef.current !== null) {
+      window.clearTimeout(musicDelayTimerRef.current);
+      musicDelayTimerRef.current = null;
+    }
     if (musicFadeFrameRef.current !== null) {
       window.cancelAnimationFrame(musicFadeFrameRef.current);
       musicFadeFrameRef.current = null;
@@ -514,7 +519,13 @@ function App() {
         src={bismillahAudio}
         preload="none"
         aria-hidden="true"
-        onEnded={() => { void playAudioStage('music'); }}
+        onEnded={() => {
+          if (musicDelayTimerRef.current !== null) window.clearTimeout(musicDelayTimerRef.current);
+          musicDelayTimerRef.current = window.setTimeout(() => {
+            void playAudioStage('music');
+            musicDelayTimerRef.current = null;
+          }, 3_000);
+        }}
         onError={() => setAudioNeedsGesture(true)}
         data-testid="audio-bismillah"
       />
@@ -539,7 +550,7 @@ function App() {
           className="intro-video"
           poster={introPoster}
           playsInline
-          preload="auto"
+          preload="none"
           aria-label={t.openingLabel}
           data-testid="video-opening-film"
           onClick={startFilm}
@@ -621,7 +632,7 @@ function App() {
           <section className={`dates-reveal${datesRevealed ? ' is-revealed' : ''}`} aria-label={t.revealDates} data-testid="section-date-reveal">
             {fireworksActive && <FireworksOverlay />}
             {!datesRevealed ? (
-              <div className="reveal-intro">
+              <div className={`reveal-intro${revealBtnReady ? ' reveal-ready' : ''}`}>
                 <button className="gold-button reveal-button" type="button" onClick={revealWeddingDates} aria-controls="revealed-date-cards" data-testid="button-reveal-dates">
                   <Sparkles size={14} /> {t.revealDates}
                 </button>
@@ -633,15 +644,15 @@ function App() {
                 <div className="revealed-grid">
                   <article className="revealed-date" data-testid="date-card-baraat">
                     <span>{t.baraat}</span>
-                    <strong>{localizeDigits(20, language)}</strong>
-                    <small>{t.november} {localizeDigits(2026, language)}</small>
-                    <p>{language === 'ur' ? `${t.friday} · ${sixPm}` : `${t.friday} ${t.evening} · ${sixPm}`}</p>
+                    <strong>{language === 'ur' ? '20' : localizeDigits(20, language)}</strong>
+                    <small>{language === 'ur' ? 'November 2026' : `${t.november} ${localizeDigits(2026, language)}`}</small>
+                    <p>{language === 'ur' ? `${t.friday} · 06:00 ${t.pm}` : `${t.friday} ${t.evening} · ${sixPm}`}</p>
                   </article>
                   <article className="revealed-date" data-testid="date-card-walima">
                     <span>{t.walima}</span>
-                    <strong>{localizeDigits(21, language)}</strong>
-                    <small>{t.november} {localizeDigits(2026, language)}</small>
-                    <p>{language === 'ur' ? `${t.saturday} · ${sixPm}` : `${t.saturday} ${t.evening} · ${sixPm}`}</p>
+                    <strong>{language === 'ur' ? '21' : localizeDigits(21, language)}</strong>
+                    <small>{language === 'ur' ? 'November 2026' : `${t.november} ${localizeDigits(2026, language)}`}</small>
+                    <p>{language === 'ur' ? `${t.saturday} · 06:00 ${t.pm}` : `${t.saturday} ${t.evening} · ${sixPm}`}</p>
                   </article>
                 </div>
               </div>
@@ -658,7 +669,7 @@ function App() {
                 {key: 'seconds', label: t.countdownSeconds, value: countdown.seconds},
               ].map(({key, label, value}) => (
                 <div className="countdown-unit" key={key} data-testid={`countdown-${key}`}>
-                  <strong>{localizeDigits(String(value).padStart(2, '0'), language)}</strong><span>{label}</span>
+                  <strong>{String(value).padStart(2, '0')}</strong><span>{label}</span>
                 </div>
               ))}
             </div>
@@ -678,7 +689,8 @@ function App() {
                 <div className="event-times">
                   <p><span>{t.functionTiming}</span><strong>{functionTime}</strong></p>
                   <p><span>{t.baraatArrival}</span><strong>{sixPm}</strong></p>
-                  <p><span>{t.dinnerRukhsati}</span><strong>{eightPm}</strong></p>
+                  <p><span>{t.dinner}</span><strong>{eightThirtyPm}</strong></p>
+                  <p><span>{t.rukhsati}</span><strong>{nineThirtyPm}</strong></p>
                 </div>
               </article>
               <article className="event-card" data-testid="event-walima">
@@ -688,7 +700,7 @@ function App() {
                 <div className="event-times">
                   <p><span>{t.functionTiming}</span><strong>{functionTime}</strong></p>
                   <p><span>{t.guestWelcome}</span><strong>{sixPm}</strong></p>
-                  <p><span>{t.dinner}</span><strong>{eightPm}</strong></p>
+                  <p><span>{t.dinner}</span><strong>{eightThirtyPm}</strong></p>
                 </div>
               </article>
             </div>
@@ -700,13 +712,27 @@ function App() {
                 <p className="eyebrow">{t.venueEyebrow}</p>
                 <h2 id="venues-title">{t.eventLocations}</h2>
                 <p>{t.mapDirections}</p>
+                <div className="venue-cards-list">
+                  <div className="venue-detail-card" data-testid="venue-card-baraat">
+                    <div className="venue-detail-info">
+                      <span className="venue-tag">{t.baraat}</span>
+                      <h4 className="venue-name">{t.ahmadMarriageHall}</h4>
+                    </div>
+                    <a className="outline-button" href={baraatMap} target="_blank" rel="noreferrer" data-testid="link-map-baraat">
+                      <MapPin size={14} /> {t.baraatMap}
+                    </a>
+                  </div>
+                  <div className="venue-detail-card" data-testid="venue-card-walima">
+                    <div className="venue-detail-info">
+                      <span className="venue-tag">{t.walima}</span>
+                      <h4 className="venue-name">{t.bhattiMarriageHall}</h4>
+                    </div>
+                    <a className="outline-button" href={walimaMap} target="_blank" rel="noreferrer" data-testid="link-map-walima">
+                      <MapPin size={14} /> {t.walimaMap}
+                    </a>
+                  </div>
+                </div>
                 <div className="venue-actions">
-                  <a className="outline-button" href={baraatMap} target="_blank" rel="noreferrer" data-testid="link-map-baraat">
-                    <MapPin size={14} /> {t.baraatMap}
-                  </a>
-                  <a className="outline-button" href={walimaMap} target="_blank" rel="noreferrer" data-testid="link-map-walima">
-                    <MapPin size={14} /> {t.walimaMap}
-                  </a>
                   <button className="outline-button calendar-button" type="button" onClick={() => makeCalendarFile(language)} data-testid="button-add-to-calendar">
                     <CalendarDays size={14} /> {t.addCalendar}
                   </button>
@@ -745,7 +771,6 @@ function App() {
           <span>{t.footerGratitude}</span>
         </footer>
       </div>
-      <FallingSparkles />
       <StarPointer />
       <a href="#couple-title" className="skip-link" data-testid="link-skip-to-invitation"><ArrowDown size={14} /> {t.skipLink}</a>
       <span className="sr-only">{t.countdownScreenReader}</span>
