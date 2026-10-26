@@ -13,24 +13,9 @@
     <meta name="twitter:title" content="Asim &amp; Sana — Wedding Invitation" />
     <meta name="twitter:description" content="Join Asim and Sana for their Baraat on 20 November and Walima on 21 November 2026." />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <!-- Preconnect so TCP+TLS handshakes happen early -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!--
-      Non-blocking font loading (print→stylesheet swap trick):
-      - rel="preload" fires a high-priority, non-render-blocking fetch.
-      - onload flips rel to "stylesheet" so fonts apply once the CSS arrives.
-      - All 5 families and weights are preserved (Amiri for Urdu, others for English).
-      - display=swap prevents invisible text (FOIT); a brief FOUT with system fonts is acceptable.
-      - <noscript> ensures fonts still load when JS is disabled.
-    -->
-    <link rel="preload" as="style"
-          href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap"
-          onload="this.onload=null;this.rel='stylesheet'">
-    <noscript>
-      <link rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap">
-    </noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" />
   </head>
   <body>
     <div id="root"></div>
