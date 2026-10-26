@@ -1296,7 +1296,7 @@ body {
 .reveal-hint { margin: .75rem 0 0; color: #c7c4b4; font-size: .67rem; }
 .revealed-dates { animation: date-arrive .65s ease both; }
 .revealed-dates h2 { margin: .2rem 0 1.4rem; color: #f4e8c6; font: 500 clamp(1.8rem,4vw,2.5rem) 'Playfair Display', serif; }
-.revealed-grid { display: grid; max-width: 680px; grid-template-columns: repeat(2,1fr); gap: 1rem; margin: 0 auto; }
+.revealed-grid { display: grid; max-width: 960px; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 1rem; margin: 0 auto; }
 .revealed-date { display: flex; min-height: 180px; flex-direction: column; align-items: center; justify-content: center; gap: .4rem; border: 1px solid rgba(226,190,86,.42); border-radius: 1rem; background: linear-gradient(180deg,rgba(17,68,52,.8),rgba(2,24,17,.82)); box-shadow: inset 0 0 0 5px rgba(226,190,86,.035); }
 .revealed-date strong { background: linear-gradient(135deg, #f7dc93 0%, #e0b146 25%, #b9831a 52%, #efd37c 76%, #9b6a0d 100%); background-clip: text; color: transparent; -webkit-background-clip: text; font: 700 clamp(4rem,8vw,5.6rem)/.95 'Cormorant Garamond',serif; }
 .countdown-section { margin: 2.6rem auto 3.4rem; padding: 1.7rem; border: 1px solid rgba(226,190,86,.23); border-radius: 1rem; background: rgba(2,24,17,.7); text-align: center; }
@@ -1309,7 +1309,7 @@ body {
 .section-heading { margin-bottom: 1.6rem; text-align: center; }
 .section-heading h2, .venue-intro h2, .contact-copy h2 { margin: 0; color: #f4e8c6; font: 500 clamp(2rem,4.5vw,3.2rem)/1.15 'Playfair Display',serif; }
 .on-time-note { display: inline-flex; align-items: center; justify-content: center; gap: .55rem; margin: 1rem auto 0; padding: .65rem 1rem; border: 1px solid rgba(226,190,86,.35); border-radius: 999px; background: rgba(2,24,17,.78); color: #f0d98e; font: 500 .67rem 'Cinzel',serif; letter-spacing: .035em; }
-.event-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 1rem; }
+.event-grid { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 1.25rem; }
 .event-card { display: flex; flex-direction: column; padding: clamp(1.2rem,3vw,1.8rem); border: 1px solid rgba(226,190,86,.32); border-radius: .85rem; background: linear-gradient(160deg,rgba(17,68,52,.91),rgba(6,38,28,.95)); transition: border-color .25s ease, transform .25s ease; }
 .event-card:hover { transform: translateY(-3px); border-color: rgba(226,190,86,.7); }
 .event-card-head { display: flex; justify-content: space-between; align-items: center; color: #e2be56; font: 600 .61rem 'Cinzel',serif; letter-spacing: .14em; text-transform: uppercase; }
@@ -1367,7 +1367,7 @@ body {
   .scratch-info { grid-template-columns: 1fr; gap: .7rem; padding: 1rem; }
   .scratch-divider { width: 4rem; height: 1px; margin: 0 auto; }
   .date-display strong { font-size: 3rem; }
-  .event-grid, .revealed-grid { grid-template-columns: 1fr; }
+  .event-grid, .revealed-grid { grid-template-columns: 1fr; grid-auto-flow: row; }
   .revealed-date { min-height: 140px; }
   .venues-section { grid-template-columns: 1fr; gap: 1.2rem; }
   .venue-row { grid-template-columns: 2.35rem minmax(0,1fr); }
@@ -1717,8 +1717,9 @@ body {
 
 .revealed-grid {
   display: grid;
-  max-width: 720px;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: 960px;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
   gap: 1.5rem;
   margin: 0 auto;
 }
@@ -1829,14 +1830,15 @@ body {
 
 .event-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
   gap: 1.8rem;
 }
 .event-card {
   display: flex;
   flex-direction: column;
   min-width: 0;
-  padding: 2rem 2.2rem;
+  padding: clamp(1.2rem, 2vw, 1.6rem);
   border: 1px solid rgba(226, 190, 86, .3);
   border-radius: .9rem;
   background: linear-gradient(160deg, rgba(23, 86, 66, .45), rgba(6, 38, 28, .65));
@@ -2185,7 +2187,8 @@ body {
   .reveal-hint { font-size: .72rem; margin-top: .55rem; }
 
   .revealed-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
+    grid-auto-flow: row !important;
     gap: .9rem;
     max-width: 100%;
   }
@@ -2238,7 +2241,8 @@ body {
   }
   .on-time-note svg { width: .8rem; height: .8rem; }
   .event-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
+    grid-auto-flow: row !important;
     gap: .95rem;
   }
   .event-card {
@@ -2957,3 +2961,94 @@ body {
 /* ─── Font-display: swap to prevent invisible text during load ─────────── */
 /* (Handled in index.html link preload, this ensures no FOUT flash) */
 body { text-rendering: optimizeSpeed; }
+
+
+/* ==========================================================================
+   PERSONALIZED INVITATION ADDITIONS (Guest Banner & Page States)
+   ========================================================================== */
+
+.guest-display-container {
+  margin: 1.4rem auto 1.6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 92%;
+  text-align: center;
+}
+
+.guest-display-name {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.35rem, 4vw, 2.15rem);
+  color: #fdf8eb;
+  font-weight: 600;
+  margin: 0.35rem 0;
+  letter-spacing: 0.03em;
+  line-height: 1.35;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.45);
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.guest-foil-rule {
+  width: min(100%, 14rem);
+  margin: 0.2rem auto;
+  opacity: 0.85;
+}
+
+.invitation-page[lang='ur'] .guest-display-name {
+  font-family: 'Amiri', serif;
+  font-size: clamp(1.45rem, 4.8vw, 2.35rem);
+  line-height: 1.4;
+  letter-spacing: 0;
+}
+
+.invite-state-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: #0f0407;
+  color: #fdf8eb;
+  position: relative;
+  z-index: 50;
+}
+
+.invite-state-card {
+  max-width: 28rem;
+  width: 100%;
+  padding: 2.2rem 1.8rem;
+  text-align: center;
+  border-radius: 1.25rem;
+  border: 1px solid rgba(223, 192, 120, 0.35);
+  background: radial-gradient(circle at top, rgba(82, 18, 38, 0.8) 0%, rgba(20, 5, 10, 0.95) 100%);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(244, 231, 197, 0.25);
+  backdrop-filter: blur(12px);
+}
+
+.invite-spinner {
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 3px solid rgba(223, 192, 120, 0.2);
+  border-top-color: #dfc078;
+  border-radius: 50%;
+  animation: invite-spin 1s linear infinite;
+  margin: 0 auto 1.2rem;
+}
+
+@keyframes invite-spin {
+  to { transform: rotate(360deg); }
+}
+
+.invite-notice-box {
+  margin: 1.5rem auto;
+  max-width: 38rem;
+  padding: 1.2rem 1.6rem;
+  border-radius: 1rem;
+  border: 1px dashed rgba(223, 192, 120, 0.35);
+  background: rgba(82, 18, 38, 0.25);
+  color: #f4e7c5;
+  text-align: center;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}

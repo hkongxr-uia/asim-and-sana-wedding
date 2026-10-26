@@ -1,0 +1,1337 @@
+/* ==========================================================================
+   ADMIN DASHBOARD STYLES
+   Fully responsive dark theme with gold accents (Web View & Phone View)
+   ========================================================================== */
+
+:root {
+  --admin-bg: #0b0f17;
+  --admin-card-bg: #141b26;
+  --admin-card-subtle: #0f1520;
+  --admin-border: #222f44;
+  --admin-border-hover: #364866;
+  --admin-border-gold: rgba(226, 190, 86, 0.3);
+  --admin-text-main: #f1f5f9;
+  --admin-text-muted: #94a3b8;
+  --admin-gold: #e2be56;
+  --admin-gold-hover: #f3cf65;
+  --admin-gold-bg: rgba(226, 190, 86, 0.12);
+  --admin-emerald: #10b981;
+  --admin-emerald-bg: rgba(16, 185, 129, 0.15);
+  --admin-rose: #f43f5e;
+  --admin-rose-bg: rgba(244, 63, 94, 0.15);
+  --admin-blue: #38bdf8;
+  --admin-blue-bg: rgba(56, 189, 248, 0.15);
+}
+
+/* ─── Base Layout ──────────────────────────────────────────────────────── */
+.admin-layout {
+  min-height: 100vh;
+  background-color: var(--admin-bg);
+  color: var(--admin-text-main);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  padding: 1.5rem;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+}
+
+.admin-container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/* ─── Header ───────────────────────────────────────────────────────────── */
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--admin-border);
+  margin-bottom: 1.5rem;
+}
+
+.admin-title-area h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 0.25rem;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  letter-spacing: -0.02em;
+}
+
+.admin-title-area p {
+  margin: 0;
+  color: var(--admin-text-muted);
+  font-size: 0.85rem;
+}
+
+.admin-user-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.admin-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  background: var(--admin-emerald-bg);
+  color: var(--admin-emerald);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  white-space: nowrap;
+}
+
+.admin-badge-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 8px currentColor;
+}
+
+/* ─── Standard Buttons ─────────────────────────────────────────────────── */
+.btn-primary, .btn-secondary, .btn-danger, .btn-subtle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+  text-decoration: none;
+  line-height: 1.2;
+  touch-action: manipulation;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #d4af37 0%, #e2be56 100%);
+  color: #0b0f17;
+  border-color: #f3cf65;
+  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.25);
+}
+.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #e2be56 0%, #f3cf65 100%);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.35);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: #1e293b;
+  color: #f1f5f9;
+  border-color: var(--admin-border);
+}
+.btn-secondary:hover:not(:disabled) {
+  background: #273549;
+  border-color: var(--admin-border-hover);
+  color: #fff;
+}
+
+.btn-danger {
+  background: var(--admin-rose-bg);
+  color: #fda4af;
+  border-color: rgba(244, 63, 94, 0.3);
+}
+.btn-danger:hover:not(:disabled) {
+  background: rgba(244, 63, 94, 0.25);
+  color: #fff;
+  border-color: rgba(244, 63, 94, 0.5);
+}
+
+.btn-subtle {
+  background: transparent;
+  color: var(--admin-text-muted);
+  border: 1px solid var(--admin-border);
+  padding: 0.45rem 0.85rem;
+  border-radius: 0.5rem;
+}
+.btn-subtle:hover:not(:disabled) {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--admin-border-hover);
+}
+
+.btn-primary:disabled, .btn-secondary:disabled, .btn-danger:disabled, .btn-subtle:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ─── Admin Tabs Navigation ────────────────────────────────────────────── */
+.admin-tabs-nav {
+  display: flex;
+  gap: 0.5rem;
+  border-bottom: 1px solid var(--admin-border);
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.admin-tabs-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.admin-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1.35rem;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--admin-text-muted);
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  touch-action: manipulation;
+}
+
+.admin-tab-btn:hover {
+  color: #fff;
+}
+
+.admin-tab-btn.active {
+  color: var(--admin-gold);
+  border-bottom-color: var(--admin-gold);
+}
+
+/* ─── Top Stats & Link Domain Bar ──────────────────────────────────────── */
+.guest-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  padding: 1.1rem 1.4rem;
+  background: var(--admin-card-bg);
+  border: 1px solid var(--admin-border);
+  border-radius: 0.85rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.guest-quick-stats {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.quick-stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.quick-stat-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--admin-text-muted);
+}
+
+.quick-stat-val {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.1;
+}
+
+.quick-stat-val.text-emerald {
+  color: var(--admin-emerald);
+}
+
+.quick-stat-divider {
+  width: 1px;
+  height: 32px;
+  background: var(--admin-border);
+  display: block;
+}
+
+.link-domain-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-end;
+}
+
+.link-domain-mode-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.link-domain-title {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--admin-text-main);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.domain-segmented-pills {
+  display: inline-flex;
+  background: #0b0f17;
+  border: 1px solid var(--admin-border);
+  border-radius: 0.5rem;
+  padding: 3px;
+  gap: 3px;
+}
+
+.domain-segment-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 0.35rem;
+  border: none;
+  background: transparent;
+  color: var(--admin-text-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  touch-action: manipulation;
+}
+
+.domain-segment-btn:hover {
+  color: #fff;
+}
+
+.domain-segment-btn.active {
+  background: #1e293b;
+  color: var(--admin-gold);
+  border: 1px solid rgba(226, 190, 86, 0.25);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.domain-input-inline {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 360px;
+}
+
+.domain-input {
+  flex: 1;
+  background: #0b0f17;
+  border: 1px solid var(--admin-border);
+  border-radius: 0.4rem;
+  padding: 0.4rem 0.65rem;
+  font-size: 0.78rem;
+  font-family: monospace;
+  color: #e2e8f0;
+}
+
+.domain-input:focus {
+  outline: none;
+  border-color: var(--admin-gold);
+}
+
+.domain-badge-live {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--admin-emerald);
+  white-space: nowrap;
+}
+
+/* ─── Main Grid Layout (Add Guest + Guest Directory) ──────────────────── */
+.admin-grid-main {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+@media (min-width: 1040px) {
+  .admin-grid-main {
+    grid-template-columns: 370px 1fr;
+  }
+}
+
+/* ─── Card Styles ──────────────────────────────────────────────────────── */
+.admin-card {
+  background: var(--admin-card-bg);
+  border: 1px solid var(--admin-border);
+  border-radius: 0.85rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-bottom: 1.35rem;
+}
+
+.card-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 0.5rem;
+  background: var(--admin-gold-bg);
+  border: 1px solid rgba(226, 190, 86, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.card-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 0;
+  color: #fff;
+  letter-spacing: -0.01em;
+}
+
+.card-subtitle {
+  font-size: 0.8rem;
+  color: var(--admin-text-muted);
+  margin: 0.2rem 0 0;
+}
+
+/* ─── Form Controls ────────────────────────────────────────────────────── */
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--admin-text-main);
+  margin-bottom: 0.45rem;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  background: #0b0f17;
+  border: 1px solid var(--admin-border);
+  border-radius: 0.5rem;
+  color: #fff;
+  font-size: 0.9rem;
+  box-sizing: border-box;
+  transition: all 0.15s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--admin-gold);
+  box-shadow: 0 0 0 2px rgba(226, 190, 86, 0.2);
+}
+
+/* ─── Event Checkbox Items ─────────────────────────────────────────────── */
+.event-checkbox-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.event-checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: 0.5rem;
+  background: #0b0f17;
+  border: 1px solid var(--admin-border);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.event-checkbox-item:hover {
+  border-color: var(--admin-border-hover);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.event-checkbox-item.checked {
+  background: rgba(226, 190, 86, 0.08);
+  border-color: rgba(226, 190, 86, 0.4);
+}
+
+.event-checkbox-item input[type="checkbox"] {
+  width: 1.15rem;
+  height: 1.15rem;
+  accent-color: #d4af37;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.event-checkbox-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--admin-text-main);
+  flex: 1;
+}
+
+/* ─── Recently Created Link Card ───────────────────────────────────────── */
+.link-copy-box {
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 0.65rem;
+  padding: 1.1rem;
+  margin-top: 1.35rem;
+  word-break: break-all;
+}
+
+.link-copy-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+}
+
+.link-copy-row input {
+  flex: 1;
+  background: #0b0f17;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 0.45rem;
+  padding: 0.5rem 0.75rem;
+  color: #a7f3d0;
+  font-size: 0.8rem;
+  font-family: monospace;
+}
+
+.link-copy-row input:focus {
+  outline: none;
+}
+
+/* ─── Guest List Toolbar & Search ──────────────────────────────────────── */
+.guest-directory-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.count-pill {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  background: #1e293b;
+  color: var(--admin-text-muted);
+  border: 1px solid var(--admin-border);
+  margin-left: 0.5rem;
+}
+
+.search-bar {
+  position: relative;
+  margin-bottom: 1.25rem;
+}
+
+.search-icon {
+  position: absolute;
+  left: 0.95rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--admin-text-muted);
+  pointer-events: none;
+}
+
+.search-input {
+  padding-left: 2.6rem;
+  padding-right: 2.4rem;
+  height: 42px;
+}
+
+.search-clear-btn {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: var(--admin-text-muted);
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.search-clear-btn:hover {
+  color: #fff;
+}
+
+/* ─── Table Styling (Web Desktop View) ─────────────────────────────────── */
+.table-wrapper {
+  overflow-x: auto;
+  border: 1px solid var(--admin-border);
+  border-radius: 0.75rem;
+  background: #0d121c;
+  -webkit-overflow-scrolling: touch;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  text-align: left;
+}
+
+.admin-table th {
+  background: #090d14;
+  padding: 0.85rem 1rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--admin-text-muted);
+  border-bottom: 1px solid var(--admin-border);
+  white-space: nowrap;
+}
+
+.admin-table td {
+  padding: 0.95rem 1rem;
+  border-bottom: 1px solid #1a2332;
+  vertical-align: middle;
+  font-size: 0.88rem;
+}
+
+.admin-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.admin-table tbody tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.admin-table tr.row-inactive td {
+  opacity: 0.55;
+}
+
+.guest-name {
+  font-weight: 600;
+  color: #fff;
+  font-size: 0.92rem;
+}
+
+.guest-date {
+  font-size: 0.72rem;
+  color: var(--admin-text-muted);
+  margin-top: 0.2rem;
+}
+
+/* Badges */
+.seats-badge {
+  display: inline-block;
+  padding: 0.25rem 0.65rem;
+  border-radius: 6px;
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  color: #38bdf8;
+  font-size: 0.78rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.event-badges-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.badge-event {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border-radius: 9999px;
+  background: var(--admin-gold-bg);
+  border: 1px solid rgba(226, 190, 86, 0.25);
+  color: var(--admin-gold);
+  font-size: 0.72rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-pill.active {
+  background: var(--admin-emerald-bg);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.status-pill.inactive {
+  background: var(--admin-rose-bg);
+  color: #fb7185;
+  border: 1px solid rgba(244, 63, 94, 0.3);
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* Table Button Group: Copy + Preview */
+.link-cell-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.btn-copy-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border-radius: 0.45rem;
+  background: #172131;
+  color: #e2e8f0;
+  border: 1px solid #2a3b54;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  touch-action: manipulation;
+}
+
+.btn-copy-link:hover:not(:disabled) {
+  background: #202e44;
+  border-color: var(--admin-gold);
+  color: #fff;
+}
+
+.btn-copy-link.copied {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: #10b981;
+  color: #34d399;
+}
+
+.btn-icon-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 0.45rem;
+  background: #172131;
+  color: var(--admin-text-muted);
+  border: 1px solid #2a3b54;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+  touch-action: manipulation;
+}
+
+.btn-icon-link:hover {
+  background: #202e44;
+  color: var(--admin-gold);
+  border-color: var(--admin-gold);
+}
+
+/* Table Row Action Icon Buttons */
+.row-actions-group {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.4rem;
+}
+
+.btn-row-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 0.45rem;
+  background: #172131;
+  color: var(--admin-text-muted);
+  border: 1px solid #2a3b54;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  touch-action: manipulation;
+}
+
+.btn-row-action:hover {
+  background: #202e44;
+  color: #fff;
+  border-color: var(--admin-border-hover);
+}
+
+.btn-row-action.action-edit:hover {
+  color: var(--admin-gold);
+  border-color: var(--admin-gold);
+}
+
+.btn-row-action.action-regen:hover {
+  color: #fb923c;
+  border-color: #fb923c;
+}
+
+.btn-row-action.action-status-deactivate {
+  color: #fda4af;
+}
+.btn-row-action.action-status-deactivate:hover {
+  background: var(--admin-rose-bg);
+  border-color: rgba(244, 63, 94, 0.5);
+  color: #fff;
+}
+
+.btn-row-action.action-status-reactivate {
+  color: #6ee7b7;
+}
+.btn-row-action.action-status-reactivate:hover {
+  background: var(--admin-emerald-bg);
+  border-color: rgba(16, 185, 129, 0.5);
+  color: #fff;
+}
+
+/* ─── Wedding Details Section ──────────────────────────────────────────── */
+.details-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 850px) {
+  .details-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.event-edit-card {
+  background: #0b0f17;
+  border: 1px solid var(--admin-border);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.event-edit-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.event-edit-header h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  color: #fff;
+}
+
+.event-edit-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+@media (min-width: 600px) {
+  .event-edit-row {
+    grid-template-columns: 160px 1fr auto;
+    align-items: flex-end;
+  }
+}
+
+/* Venue & Map Section inside event cards */
+.event-venue-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--admin-border);
+}
+
+.event-venue-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--admin-gold);
+}
+
+.event-timings-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+@media (min-width: 500px) {
+  .event-timings-grid {
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  }
+}
+
+.event-venue-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+@media (min-width: 560px) {
+  .event-venue-row {
+    grid-template-columns: 1fr 2fr;
+    align-items: start;
+  }
+}
+
+/* ─── Modals ───────────────────────────────────────────────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  z-index: 1000;
+}
+
+.modal-card {
+  width: 100%;
+  max-width: 500px;
+  background: var(--admin-card-bg);
+  border: 1px solid var(--admin-border);
+  border-radius: 1rem;
+  padding: 1.75rem;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7);
+  box-sizing: border-box;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.35rem;
+}
+
+.modal-header h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+  color: #fff;
+}
+
+/* ─── Alerts ───────────────────────────────────────────────────────────── */
+.alert-success {
+  background: var(--admin-emerald-bg);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #6ee7b7;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.alert-error {
+  background: var(--admin-rose-bg);
+  border: 1px solid rgba(244, 63, 94, 0.3);
+  color: #fda4af;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+/* ─── Animations ───────────────────────────────────────────────────────── */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinning {
+  animation: spin 1s linear infinite;
+}
+
+/* ─── Login Backdrop & Card ────────────────────────────────────────────── */
+.login-backdrop {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--admin-bg);
+  padding: 1.5rem;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--admin-card-bg);
+  border: 1px solid var(--admin-border);
+  border-radius: 1rem;
+  padding: 2.2rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  box-sizing: border-box;
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 1.75rem;
+}
+
+.login-icon-box {
+  width: 52px;
+  height: 52px;
+  border-radius: 0.75rem;
+  background: var(--admin-gold-bg);
+  border: 1px solid rgba(226, 190, 86, 0.3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.login-header h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 0.35rem;
+}
+
+.login-header p {
+  color: var(--admin-text-muted);
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.login-error-msg {
+  background: var(--admin-rose-bg);
+  border: 1px solid rgba(244, 63, 94, 0.3);
+  color: #fda4af;
+  padding: 0.65rem 0.85rem;
+  border-radius: 0.5rem;
+  font-size: 0.82rem;
+  margin-bottom: 1.25rem;
+}
+
+/* ==========================================================================
+   PHONE / MOBILE RESPONSIVE OPTIMIZATIONS (< 768px)
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  /* Layout & Container */
+  .admin-layout {
+    padding: 0.85rem 0.75rem 2rem;
+  }
+
+  .admin-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.85rem;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .admin-title-area h1 {
+    font-size: 1.35rem;
+  }
+
+  .admin-user-bar {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  /* Navigation Tabs */
+  .admin-tabs-nav {
+    margin-bottom: 1.25rem;
+  }
+
+  .admin-tab-btn {
+    padding: 0.75rem 1rem;
+    font-size: 0.86rem;
+  }
+
+  /* Top Stats & Domain Bar on Phone */
+  .guest-top-bar {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .guest-quick-stats {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    text-align: center;
+  }
+
+  .quick-stat-divider {
+    display: none;
+  }
+
+  .quick-stat-item {
+    background: #0b0f17;
+    border: 1px solid var(--admin-border);
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.35rem;
+  }
+
+  .quick-stat-label {
+    font-size: 0.65rem;
+  }
+
+  .quick-stat-val {
+    font-size: 1.15rem;
+  }
+
+  .link-domain-box {
+    width: 100%;
+    align-items: stretch;
+  }
+
+  .link-domain-mode-row {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .domain-segmented-pills {
+    flex: 1;
+    max-width: 220px;
+  }
+
+  .domain-segment-btn {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .domain-input-inline {
+    max-width: 100%;
+  }
+
+  /* Card padding on Mobile */
+  .admin-card {
+    padding: 1.15rem 1rem;
+    border-radius: 0.75rem;
+  }
+
+  /* Inputs: prevent auto-zoom on iOS safari by keeping font-size >= 16px */
+  .form-input,
+  .domain-input,
+  .search-input {
+    font-size: 16px !important;
+  }
+
+  /* ── Mobile Guest Cards Transformation ── */
+  /* On mobile phones, transform the wide data table into clean individual guest cards! */
+  .table-wrapper {
+    background: transparent;
+    border: none;
+    overflow: visible;
+  }
+
+  .admin-table,
+  .admin-table tbody,
+  .admin-table tr {
+    display: block;
+    width: 100%;
+  }
+
+  .admin-table thead {
+    display: none; /* Hide desktop table headers on mobile */
+  }
+
+  .admin-table tbody tr {
+    background: #0f1520;
+    border: 1px solid var(--admin-border);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    margin-bottom: 0.85rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+
+  .admin-table td {
+    display: block;
+    padding: 0;
+    border: none;
+    width: 100%;
+  }
+
+  /* Card Top Row: Guest Name & Status */
+  .admin-table td.cell-guest {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .admin-table td.cell-status {
+    order: -1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--admin-border);
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .admin-table td.cell-status::before {
+    content: "Invitation Status";
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--admin-text-muted);
+    font-weight: 600;
+  }
+
+  /* Card Meta Row: Seats & Assigned Events */
+  .admin-table td.cell-seats {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .admin-table td.cell-seats::before {
+    content: "Seats:";
+    font-size: 0.75rem;
+    color: var(--admin-text-muted);
+    font-weight: 600;
+  }
+
+  .admin-table td.cell-events {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .admin-table td.cell-events::before {
+    content: "Events:";
+    font-size: 0.75rem;
+    color: var(--admin-text-muted);
+    font-weight: 600;
+  }
+
+  /* Card Action Rows: Link & Buttons */
+  .admin-table td.cell-link {
+    padding-top: 0.4rem;
+    border-top: 1px dashed var(--admin-border);
+  }
+
+  .link-cell-group {
+    display: flex;
+    width: 100%;
+    gap: 0.5rem;
+  }
+
+  .btn-copy-link {
+    flex: 1;
+    justify-content: center;
+    height: 38px;
+    font-size: 0.85rem;
+  }
+
+  .btn-icon-link {
+    width: 38px;
+    height: 38px;
+  }
+
+  .admin-table td.cell-actions {
+    padding-top: 0.3rem;
+  }
+
+  .row-actions-group {
+    justify-content: space-between;
+    width: 100%;
+    gap: 0.5rem;
+  }
+
+  .btn-row-action {
+    flex: 1;
+    height: 38px;
+  }
+
+  /* Recently Created Box on phone */
+  .link-copy-row {
+    flex-direction: column;
+  }
+
+  .link-copy-row button {
+    width: 100%;
+    height: 40px;
+  }
+
+  /* Wedding Details Event Cards on Phone */
+  .event-edit-row {
+    grid-template-columns: 1fr;
+    gap: 0.65rem;
+  }
+
+  .event-edit-row button {
+    width: 100% !important;
+    height: 42px !important;
+    margin-top: 0.25rem;
+  }
+
+  .event-venue-row {
+    grid-template-columns: 1fr;
+    gap: 0.65rem;
+  }
+
+  /* Modals on Phone */
+  .modal-overlay {
+    padding: 0.75rem;
+  }
+
+  .modal-card {
+    padding: 1.25rem 1rem;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+}
+
+/* Extra small phones (< 400px) */
+@media (max-width: 400px) {
+  .admin-layout {
+    padding: 0.5rem 0.5rem 1.5rem;
+  }
+
+  .quick-stat-val {
+    font-size: 1rem;
+  }
+
+  .quick-stat-label {
+    font-size: 0.6rem;
+  }
+}
