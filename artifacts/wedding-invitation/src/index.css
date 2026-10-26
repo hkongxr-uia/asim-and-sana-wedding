@@ -2371,7 +2371,7 @@ body {
   content: '';
   opacity: .34;
   pointer-events: none;
-  animation: sparkle-twinkle 3.8s ease-in-out infinite alternate;
+  animation: sparkle-twinkle 7s ease-in-out infinite alternate;
 }
 
 .intro-sparkles {
@@ -2387,7 +2387,7 @@ body {
   content: '';
   opacity: .6;
   pointer-events: none;
-  animation: sparkle-twinkle 4.4s ease-in-out infinite alternate;
+  animation: sparkle-twinkle 8s ease-in-out infinite alternate;
 }
 
 .nav-language {
@@ -2886,23 +2886,35 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .invitation-page::after { animation: none; opacity: .24; }
+  .invitation-page::before { animation: none; }
   .intro-sparkles { animation: none; opacity: .35; }
-  .star-cursor { animation: none; }
+  .star-cursor { animation: none; will-change: auto; }
   .star-trail, .fireworks-overlay { display: none !important; }
   .reveal-intro .gold-button.reveal-button { animation: none !important; }
+  /* Foil shimmer and medallion: stop moving, keep content visible */
+  .foil-shimmer, [class*="foil"], [class*="shimmer"] { animation: none !important; }
+  .medallion, .medallion-inner { animation: none !important; }
+  /* Revealed dates: show immediately without animation */
+  .date-display, .revealed-date { animation: none; opacity: 1; }
+  /* Invitation card arrive: show without transition */
+  .invitation-card { animation: none !important; opacity: 1 !important; }
 }
 
-/* ─── Performance: GPU-composited layers on animated elements ─────────── */
+/* ─── Performance: GPU-composited layers on actively animated elements ─── */
+/* Only applied to elements that actually animate; avoids unnecessary GPU layers. */
 .intro-video,
 .intro-vignette,
 .intro-sparkles,
-.invitation-card,
-.medallion,
-.revealed-dates,
-.fireworks-overlay,
-.star-cursor {
+.fireworks-overlay {
   will-change: transform;
-  transform: translateZ(0); /* promote to own compositor layer */
+  transform: translateZ(0);
+}
+/* Star cursor only on devices with a fine pointer (mouse/stylus) */
+@media (pointer: fine) {
+  .star-cursor {
+    will-change: transform;
+    transform: translateZ(0);
+  }
 }
 
 /* ─── Contain layout/paint to limit reflow blast-radius ──────────────── */
@@ -2925,7 +2937,7 @@ body {
   .revealed-date strong  { font-size: clamp(2.6rem, 12vw, 3.4rem) !important; }
 
   /* Reduce animation cost */
-  .invitation-page::after { animation-duration: 8s; }
+  .invitation-page::after { animation-duration: 12s; }
 }
 
 /* ─── Mid-range phones (361-480px) ───────────────────────────────────── */

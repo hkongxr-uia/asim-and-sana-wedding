@@ -18,7 +18,9 @@ import {
 import bismillahAudio from '@assets/0_bismillah_1792636329790.mp3';
 import introVideoWebm from '@assets/0_intro_1792477792582.webm';
 import introVideoMp4 from '@assets/0_intro_1792477792582.mp4';
-import introPoster from '@assets/0_intro_1792477792582-poster.jpg';
+// Optimised WebP poster (540×960, ~57 KiB vs original 228 KiB JPEG).
+// Original JPEG (0_intro_1792477792582-poster.jpg) is preserved in attached_assets for rollback.
+import introPoster from '@assets/0_intro_1792477792582-poster-opt.webp';
 import weddingMusic from '@assets/0_wedding-music_1792636335449.mp3';
 import { supabase } from '@/lib/supabase';
 import NotFound from '@/pages/not-found';
@@ -608,43 +610,50 @@ function WeddingInvitation({ token }: { token?: string }) {
   const fetchData = useCallback(async () => {
     setPageStatus('loading');
     try {
-      // 1. Fetch wedding details for couple names and contact
-      const { data: detailsData } = await supabase
-        .from('wedding_details')
-        .select('*')
-        .limit(1)
-        .maybeSingle();
-
-      if (detailsData) {
-        setWeddingDetails(detailsData);
-      }
-
-      // 2. If token is present, perform secure RPC lookup
       if (token) {
-        const { data: guestData, error: rpcError } = await supabase.rpc('get_guest_by_token', {
-          lookup_token: token,
-        });
+        // Personalised invite route: fetch wedding_details and guest events in parallel.
+        // The two requests are independent — wedding_details does not depend on the guest token.
+        // Both run concurrently; we wait for both before updating any state so the invitation
+        // never briefly shows unassigned events or stale couple names.
+        const [detailsResult, guestResult] = await Promise.all([
+          supabase.from('wedding_details').select('*').limit(1).maybeSingle(),
+          supabase.rpc('get_guest_by_token', { lookup_token: token }),
+        ]);
 
-        if (rpcError) {
+        if (detailsResult.data) {
+          setWeddingDetails(detailsResult.data);
+        }
+
+        if (guestResult.error) {
           setPageStatus('error');
           return;
         }
 
-        if (!guestData || guestData.length === 0) {
+        if (!guestResult.data || guestResult.data.length === 0) {
           setPageStatus('unavailable');
           return;
         }
 
-        const sortedEvents = [...guestData].sort(
+        const sortedEvents = [...guestResult.data].sort(
           (a: GuestEvent, b: GuestEvent) => a.sort_order - b.sort_order,
         );
 
-        setGuestName(guestData[0].guest_name);
-        setSeatsReserved(guestData[0].seats_reserved);
+        setGuestName(guestResult.data[0].guest_name);
+        setSeatsReserved(guestResult.data[0].seats_reserved);
         setEvents(sortedEvents);
         setPageStatus('success');
       } else {
-        // Public homepage mode: no guest token
+        // Public homepage: only wedding_details needed (no guest token).
+        const { data: detailsData } = await supabase
+          .from('wedding_details')
+          .select('*')
+          .limit(1)
+          .maybeSingle();
+
+        if (detailsData) {
+          setWeddingDetails(detailsData);
+        }
+
         setGuestName(null);
         setSeatsReserved(null);
         setEvents([]);
