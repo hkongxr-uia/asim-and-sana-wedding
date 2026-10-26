@@ -498,6 +498,26 @@ button:focus-visible, a:focus-visible {
 }
 
 .intro-play:hover { background: rgba(14, 49, 37, .95); transform: translateY(-2px); }
+.intro-bismillah-btn {
+  display: inline-flex;
+  min-height: 3.4rem;
+  align-items: center;
+  justify-content: center;
+  gap: .8rem;
+  padding: 0 1.55rem;
+  border: 1px solid rgba(223, 192, 122, .8);
+  border-radius: 99px;
+  background: rgba(14, 49, 37, .85);
+  color: #f4e5bc;
+  font-size: .72rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition: background .25s ease, transform .25s ease;
+}
+
+.intro-bismillah-btn:hover { background: rgba(14, 49, 37, .98); transform: translateY(-2px); }
 .intro-skip {
   padding: .35rem .75rem;
   border: 0;
@@ -2506,6 +2526,7 @@ body {
 .invitation-page[lang='ur'] .nav-language,
 .invitation-page[lang='ur'] .intro-instruction,
 .invitation-page[lang='ur'] .intro-play,
+.invitation-page[lang='ur'] .intro-bismillah-btn,
 .invitation-page[lang='ur'] .intro-skip {
   font-family: 'Amiri', serif;
   letter-spacing: 0;
@@ -2963,6 +2984,7 @@ body {
 .gold-button,
 .outline-button,
 .intro-play,
+.intro-bismillah-btn,
 .intro-skip,
 .nav-audio,
 .nav-language,

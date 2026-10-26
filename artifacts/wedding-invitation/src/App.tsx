@@ -82,6 +82,7 @@ const copy = {
     muteMusic: 'Mute background music',
     unmuteMusic: 'Unmute background music',
     enableAudio: 'Enable invitation audio',
+    tapToPlayBismillah: 'Tap to play Bismillah',
     audioNeedsTap: 'Tap the sound button to start the invitation audio.',
     invitationCopy:
       'Together with their families, we warmly invite you to celebrate our Big moment. Your presence, love, and prayers mean the world to us as we begin this blessed new journey together.',
@@ -148,6 +149,7 @@ const copy = {
     muteMusic: 'موسیقی بند کریں',
     unmuteMusic: 'موسیقی چلائیں',
     enableAudio: 'دعوت کی آڈیو چلائیں',
+    tapToPlayBismillah: 'بسم اللہ سننے کے لیے ٹیپ کریں',
     audioNeedsTap: 'دعوت کی آڈیو چلانے کے لیے آواز کے بٹن کو دبائیں۔',
     invitationCopy:
       'اپنے اہلِ خانہ کے ساتھ، ہم آپ کو اپنی خوشی کے اس خاص موقع پر شرکت کی دعوت دیتے ہیں۔ آپ کی موجودگی، محبت اور دعائیں ہمارے لیے بہت قیمتی ہیں، کیونکہ ہم اپنی اس بابرکت نئی زندگی کا آغاز کر رہے ہیں۔',
@@ -593,6 +595,15 @@ function WeddingInvitation({ token }: { token?: string }) {
   const audioSequenceStartedRef = useRef(false);
   const pendingAudioStageRef = useRef<'bismillah' | 'music'>('bismillah');
   const musicMutedRef = useRef(false);
+  const audioCtxRef = useRef<AudioContext | null>(null);
+  const gainNodeRef = useRef<GainNode | null>(null);
+  const mediaElementSourceRef = useRef<MediaElementAudioSourceNode | null>(null);
+  const videoPlaybackLoopRef = useRef<number | null>(null);
+  const videoFadeStartedRef = useRef(false);
+  const videoFadeCompletedRef = useRef(false);
+  const bismillahStartedRef = useRef(false);
+
+  const [bismillahNeedsTap, setBismillahNeedsTap] = useState(false);
 
   const [invitationOpen, setInvitationOpen] = useState(false);
   const [playing, setPlaying] = useState(false);
@@ -682,6 +693,7 @@ function WeddingInvitation({ token }: { token?: string }) {
       if (fireworksTimerRef.current !== null) window.clearTimeout(fireworksTimerRef.current);
       if (musicFadeFrameRef.current !== null) window.cancelAnimationFrame(musicFadeFrameRef.current);
       if (musicDelayTimerRef.current !== null) window.clearTimeout(musicDelayTimerRef.current);
+      if (videoPlaybackLoopRef.current !== null) window.cancelAnimationFrame(videoPlaybackLoopRef.current);
       audioGenerationRef.current += 1;
       bismillahAudioRef.current?.pause();
       musicAudioRef.current?.pause();
@@ -733,6 +745,7 @@ function WeddingInvitation({ token }: { token?: string }) {
     const audio = stage === 'bismillah' ? bismillahAudioRef.current : musicAudioRef.current;
     if (!audio) {
       setAudioNeedsGesture(true);
+      if (stage === 'bismillah') setBismillahNeedsTap(true);
       return;
     }
 
@@ -744,7 +757,7 @@ function WeddingInvitation({ token }: { token?: string }) {
     audio.currentTime = 0;
     if (stage === 'bismillah') {
       audio.loop = false;
-      audio.muted = false;
+      audio.muted = musicMutedRef.current;
       audio.volume = 0.65;
     } else {
       audio.loop = true;
@@ -759,27 +772,37 @@ function WeddingInvitation({ token }: { token?: string }) {
         return;
       }
       setAudioNeedsGesture(false);
+      setBismillahNeedsTap(false);
       if (stage === 'music') fadeInMusic(audio);
     } catch {
-      if (generation === audioGenerationRef.current) setAudioNeedsGesture(true);
+      if (generation === audioGenerationRef.current) {
+        setAudioNeedsGesture(true);
+        if (stage === 'bismillah') setBismillahNeedsTap(true);
+      }
     }
   }
 
   function startAudioSequence() {
     if (audioSequenceStartedRef.current) return;
     audioSequenceStartedRef.current = true;
+    bismillahStartedRef.current = true;
     pendingAudioStageRef.current = 'bismillah';
     audioGenerationRef.current += 1;
     void playAudioStage('bismillah');
   }
 
   function toggleMusic() {
-    if (audioNeedsGesture) {
+    if (audioNeedsGesture || bismillahNeedsTap) {
       if (pendingAudioStageRef.current === 'music') {
         musicMutedRef.current = false;
         setMusicMuted(false);
         if (musicAudioRef.current) musicAudioRef.current.muted = false;
+      } else if (pendingAudioStageRef.current === 'bismillah') {
+        musicMutedRef.current = false;
+        setMusicMuted(false);
+        if (bismillahAudioRef.current) bismillahAudioRef.current.muted = false;
       }
+      setBismillahNeedsTap(false);
       void playAudioStage(pendingAudioStageRef.current);
       return;
     }
@@ -787,10 +810,21 @@ function WeddingInvitation({ token }: { token?: string }) {
     const nextMuted = !musicMutedRef.current;
     musicMutedRef.current = nextMuted;
     setMusicMuted(nextMuted);
+    if (bismillahAudioRef.current) {
+      bismillahAudioRef.current.muted = nextMuted;
+    }
     if (musicAudioRef.current) {
       musicAudioRef.current.muted = nextMuted;
       if (!nextMuted && pendingAudioStageRef.current === 'music') {
         fadeInMusic(musicAudioRef.current);
+      }
+    }
+    if (videoRef.current && !videoFadeCompletedRef.current) {
+      videoRef.current.muted = nextMuted;
+      if (gainNodeRef.current && audioCtxRef.current) {
+        try {
+          gainNodeRef.current.gain.setValueAtTime(nextMuted ? 0 : 1, audioCtxRef.current.currentTime);
+        } catch {}
       }
     }
   }
@@ -798,8 +832,11 @@ function WeddingInvitation({ token }: { token?: string }) {
   function stopAudioSequence() {
     audioGenerationRef.current += 1;
     audioSequenceStartedRef.current = false;
+    bismillahStartedRef.current = false;
     pendingAudioStageRef.current = 'bismillah';
     setAudioNeedsGesture(false);
+    setBismillahNeedsTap(false);
+    stopFadeMonitoring();
     if (musicDelayTimerRef.current !== null) {
       window.clearTimeout(musicDelayTimerRef.current);
       musicDelayTimerRef.current = null;
@@ -812,13 +849,128 @@ function WeddingInvitation({ token }: { token?: string }) {
     musicAudioRef.current?.pause();
   }
 
+  const updateVideoFade = useCallback((ct: number) => {
+    if (videoFadeCompletedRef.current) return;
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (ct >= 2.0) {
+      if (!videoFadeStartedRef.current) {
+        videoFadeStartedRef.current = true;
+      }
+      // Linear volume fade over 1.0 second from 2.0s to 3.0s of actual video playback
+      const progress = Math.min(1, Math.max(0, (ct - 2.0) / 1.0));
+      const targetVolume = musicMutedRef.current ? 0 : Math.max(0, 1 - progress);
+
+      if (gainNodeRef.current && audioCtxRef.current) {
+        try {
+          gainNodeRef.current.gain.setValueAtTime(targetVolume, audioCtxRef.current.currentTime);
+        } catch {}
+      }
+
+      try {
+        video.volume = targetVolume;
+      } catch {}
+
+      if (progress >= 1) {
+        videoFadeCompletedRef.current = true;
+        video.muted = true;
+        if (gainNodeRef.current && audioCtxRef.current) {
+          try {
+            gainNodeRef.current.gain.setValueAtTime(0, audioCtxRef.current.currentTime);
+          } catch {}
+        }
+        // Immediately after the fade completes, play the existing Bismillah audio once
+        startAudioSequence();
+      }
+    }
+  }, []);
+
+  const checkVideoProgress = useCallback(() => {
+    const video = videoRef.current;
+    if (!video || video.paused || video.ended) return;
+
+    updateVideoFade(video.currentTime);
+
+    if (!videoFadeCompletedRef.current) {
+      videoPlaybackLoopRef.current = window.requestAnimationFrame(checkVideoProgress);
+    }
+  }, [updateVideoFade]);
+
+  const startFadeMonitoring = useCallback(() => {
+    if (videoPlaybackLoopRef.current !== null) {
+      window.cancelAnimationFrame(videoPlaybackLoopRef.current);
+      videoPlaybackLoopRef.current = null;
+    }
+    if (!videoFadeCompletedRef.current) {
+      videoPlaybackLoopRef.current = window.requestAnimationFrame(checkVideoProgress);
+    }
+  }, [checkVideoProgress]);
+
+  const stopFadeMonitoring = useCallback(() => {
+    if (videoPlaybackLoopRef.current !== null) {
+      window.cancelAnimationFrame(videoPlaybackLoopRef.current);
+      videoPlaybackLoopRef.current = null;
+    }
+  }, []);
+
   async function startFilm() {
     setPlaybackFailed(false);
     const video = videoRef.current;
     if (!video) return setPlaybackFailed(true);
+
+    // Initialise or resume Web Audio routing on user gesture
+    try {
+      const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      if (AudioContextClass && !audioCtxRef.current) {
+        const ctx = new AudioContextClass();
+        audioCtxRef.current = ctx;
+        if (!mediaElementSourceRef.current && video) {
+          const src = ctx.createMediaElementSource(video);
+          const gain = ctx.createGain();
+          src.connect(gain);
+          gain.connect(ctx.destination);
+          mediaElementSourceRef.current = src;
+          gainNodeRef.current = gain;
+        }
+      }
+    } catch (e) {
+      console.warn('Web Audio routing unavailable, falling back to media element volume/mute', e);
+    }
+
+    if (audioCtxRef.current && audioCtxRef.current.state === 'suspended') {
+      audioCtxRef.current.resume().catch(() => {});
+    }
+
+    if ('audioSession' in navigator) {
+      try {
+        (navigator as unknown as { audioSession: { type: string } }).audioSession.type = 'playback';
+      } catch {}
+    }
+
+    // Reset fade and sequence state for fresh film playback
+    videoFadeStartedRef.current = false;
+    videoFadeCompletedRef.current = false;
+    bismillahStartedRef.current = false;
+    setBismillahNeedsTap(false);
+
+    video.muted = musicMutedRef.current;
+    try {
+      video.volume = musicMutedRef.current ? 0 : 1;
+    } catch {}
+    if (gainNodeRef.current && audioCtxRef.current) {
+      try {
+        gainNodeRef.current.gain.cancelScheduledValues(audioCtxRef.current.currentTime);
+        gainNodeRef.current.gain.setValueAtTime(musicMutedRef.current ? 0 : 1, audioCtxRef.current.currentTime);
+      } catch {}
+    }
+
     try {
       await video.play();
       setPlaying(true);
+      // Preload bismillah audio so buffer is ready by the 3-second mark
+      bismillahAudioRef.current?.load();
+      startFadeMonitoring();
     } catch {
       setPlaybackFailed(true);
       setPlaying(false);
@@ -826,20 +978,43 @@ function WeddingInvitation({ token }: { token?: string }) {
   }
 
   function openInvitation() {
+    stopFadeMonitoring();
     const video = videoRef.current;
     if (video && !video.ended) video.pause();
     setPlaying(false);
     setInvitationOpen(true);
-    startAudioSequence();
+
+    // If intro is skipped before sequence completes, cancel pending video sequence
+    // and use the single consistent Bismillah playback path.
+    if (!audioSequenceStartedRef.current) {
+      videoFadeCompletedRef.current = true;
+      if (video) video.muted = true;
+      startAudioSequence();
+    }
   }
 
   function returnToCover() {
+    stopFadeMonitoring();
     stopAudioSequence();
     const video = videoRef.current;
     if (video) {
       video.pause();
       video.currentTime = 0;
+      video.muted = musicMutedRef.current;
+      try {
+        video.volume = musicMutedRef.current ? 0 : 1;
+      } catch {}
     }
+    if (gainNodeRef.current && audioCtxRef.current) {
+      try {
+        gainNodeRef.current.gain.cancelScheduledValues(audioCtxRef.current.currentTime);
+        gainNodeRef.current.gain.setValueAtTime(musicMutedRef.current ? 0 : 1, audioCtxRef.current.currentTime);
+      } catch {}
+    }
+    videoFadeStartedRef.current = false;
+    videoFadeCompletedRef.current = false;
+    bismillahStartedRef.current = false;
+    setBismillahNeedsTap(false);
     setPlaying(false);
     setPlaybackFailed(false);
     setInvitationOpen(false);
@@ -929,11 +1104,24 @@ function WeddingInvitation({ token }: { token?: string }) {
           data-testid="video-opening-film"
           onClick={startFilm}
           onEnded={() => {
+            stopFadeMonitoring();
             openInvitation();
             setPlaying(false);
           }}
-          onError={() => setPlaybackFailed(true)}
-          onPlay={() => setPlaying(true)}
+          onError={() => {
+            stopFadeMonitoring();
+            setPlaybackFailed(true);
+          }}
+          onPlay={() => {
+            setPlaying(true);
+            startFadeMonitoring();
+          }}
+          onPause={() => {
+            stopFadeMonitoring();
+          }}
+          onTimeUpdate={(e) => {
+            updateVideoFade((e.currentTarget as HTMLVideoElement).currentTime);
+          }}
         >
           <source src={introVideoWebm} type="video/webm" />
           <source src={introVideoMp4} type="video/mp4" />
@@ -952,6 +1140,20 @@ function WeddingInvitation({ token }: { token?: string }) {
             <button className="intro-play" type="button" onClick={startFilm} data-testid="button-play-film">
               <Play size={15} fill="currentColor" />
               {playbackFailed ? t.tryFilmAgain : t.tapToBegin}
+            </button>
+          )}
+          {bismillahNeedsTap && (
+            <button
+              className="intro-bismillah-btn"
+              type="button"
+              onClick={() => {
+                setBismillahNeedsTap(false);
+                void playAudioStage('bismillah');
+              }}
+              data-testid="button-play-bismillah"
+            >
+              <Volume2 size={15} />
+              {t.tapToPlayBismillah}
             </button>
           )}
           <button type="button" className="intro-skip" onClick={openInvitation} data-testid="button-skip-film">
@@ -999,9 +1201,18 @@ function WeddingInvitation({ token }: { token?: string }) {
             {t.rsvp}
           </a>
         </nav>
-        {audioNeedsGesture && (
+        {(audioNeedsGesture || bismillahNeedsTap) && (
           <p className="audio-hint" role="status" aria-live="polite">
-            {t.audioNeedsTap}
+            <button
+              type="button"
+              className="underline hover:text-amber-100 cursor-pointer"
+              onClick={() => {
+                setBismillahNeedsTap(false);
+                void playAudioStage(pendingAudioStageRef.current);
+              }}
+            >
+              {pendingAudioStageRef.current === 'bismillah' ? t.tapToPlayBismillah : t.audioNeedsTap}
+            </button>
           </p>
         )}
 
